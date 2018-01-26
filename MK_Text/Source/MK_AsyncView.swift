@@ -6,23 +6,16 @@
 //  Copyright © 2018年 MBP. All rights reserved.
 //
 
-import Foundation
-
 #if os(macOS)
     import AppKit
-    typealias ViewClass = NSView
-
 #else
     import UIKit
-    typealias ViewClass = UIView
-
 #endif
 
-class MK_AsyncView: ViewClass {
 
+class MK_AsyncView: MK_View {
 
     override func draw(_ rect: CGRect) {
-
         guard let task = self.drawTask else {
             return
         }
@@ -63,7 +56,6 @@ class MK_AsyncView: ViewClass {
             MK_OperationQueue.addOperation(op)
         }
     }
-
 
 
     var isAsync:Bool = false

@@ -10,12 +10,13 @@ import Foundation
 
 
 fileprivate func ObserverRunTimeBeforeWaiting(){
-    OperationQueue.main.addOperation {
-        for op in DrawOperationSet{
-            MK_OperationQueue.addOperation(op)
-        }
-        DrawOperationSet.removeAll()
+    let lock = NSLock()
+    lock.lock()
+    for op in DrawOperationSet{
+        MK_OperationQueue.addOperation(op)
     }
+    DrawOperationSet.removeAll()
+    lock.unlock()
 }
 
 fileprivate var DrawOperationSet:Set<Operation> = Set.init()
@@ -38,11 +39,10 @@ let MK_OperationQueue:OperationQueue = { () -> OperationQueue in
 fileprivate var set = 1
 
 class MK_RunTimeRuntimeObserver{
-
     static let share = { () -> MK_RunTimeRuntimeObserver in
         let res = MK_RunTimeRuntimeObserver()
         let runloop = CFRunLoopGetMain()
-
+        
         let observer = CFRunLoopObserverCreate(CFAllocatorGetDefault().takeUnretainedValue(),
                                                1 << 5 ,
                                                true,

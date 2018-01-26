@@ -6,13 +6,7 @@
 //  Copyright © 2018年 MBP. All rights reserved.
 //
 
-#if os(macOS)
-    import AppKit
-
-#else
-    import UIKit
-
-#endif
+import Foundation
 
 struct MK_AsyncTask{
 
