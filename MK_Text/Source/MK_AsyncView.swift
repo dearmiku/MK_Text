@@ -13,9 +13,9 @@
 #endif
 
 
-class MK_AsyncView: MK_View {
+public class MK_AsyncView: MK_View {
 
-    override func draw(_ rect: CGRect) {
+    override public func draw(_ rect: CGRect) {
         guard let task = self.drawTask else {
             return
         }
@@ -37,6 +37,9 @@ class MK_AsyncView: MK_View {
                 #else
                     UIGraphicsBeginImageContext(size)
                     guard let context = UIGraphicsGetCurrentContext() else {return}
+                    context.translateBy(x: 0, y: size.height)
+                    context.scaleBy(x: 1.0, y: -1.0)
+
                     task.disPlayBlock!(context,size)
 
                     let im = UIGraphicsGetImageFromCurrentImageContext()
@@ -53,7 +56,7 @@ class MK_AsyncView: MK_View {
         if isAsync{
             DrawOPSetAddOperation(op: op)
         }else{
-            MK_OperationQueue.addOperation(op)
+            OperationQueue.main.addOperation(op)
         }
     }
 
@@ -67,7 +70,7 @@ class MK_AsyncView: MK_View {
         setUpView()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
     }

@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import CoreGraphics
+import CoreText
 
 public extension NSMutableAttributedString {
     enum ContentType {
