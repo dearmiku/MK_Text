@@ -13,6 +13,14 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let lay = MK_TextLayout()
+        let size = CGSize.init(width: 30, height: 300)
+        let str = NSMutableAttributedString.init(string: "gfiyusdg;olaujfusgbahu,eipomfjjsbgfw;ghiawq3")
+        print(lay.layout(str: str, drawSize: size))
+
+
+
+
 
         let MK_TV = MK_AsyncView.init(frame:  CGRect.init(x: 0, y: 0, width: 300, height: 300))
         var task = MK_AsyncTask()
@@ -46,10 +54,10 @@ class ViewController: NSViewController {
             CTFrameDraw(frame, context)
 
 
-//            let rex = attStr.boundingRect(with: NSSize.init(width: 300, height: 300), options: NSString.DrawingOptions.usesLineFragmentOrigin)
-//
-//
-//            print(rex)
+            //            let rex = attStr.boundingRect(with: NSSize.init(width: 300, height: 300), options: NSString.DrawingOptions.usesLineFragmentOrigin)
+            //
+            //
+            //            print(rex)
 
 
 
@@ -105,12 +113,9 @@ class ViewController: NSViewController {
             }
         }
 
+        MK_TV.setNewTask(task: task)
+        //self.view.addSubview(MK_TV)
 
-
-            MK_TV.setNewTask(task: task)
-
-            self.view.addSubview(MK_TV)
-
-        }
+    }
 }
 
