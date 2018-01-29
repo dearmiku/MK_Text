@@ -34,5 +34,16 @@ public extension NSBezierPath{
 }
 #endif
 
+//MARK:- 富文本扩展
+extension NSAttributedString {
+
+    ///获取富文本字符串的快捷方式
+    var range:NSRange{
+        get{
+            return NSRange.init(location: 0, length: self.length)
+        }
+    }
+
+}
 
 

@@ -11,13 +11,15 @@ import CoreGraphics
 import CoreText
 
 public extension NSMutableAttributedString {
+    ///内容
     enum ContentType {
 
         case image (MK_Image,CGSize)
 
-        case view (MK_View,CGSize)
+        case view (MK_View,CGSize,MK_View)
     }
 
+    ///对齐方式
     enum AlignType{
         case center
 
@@ -35,6 +37,10 @@ public extension NSMutableAttributedString {
         return acc.turnToAttrStr()
     }
     ///控件富文本
+    static func mk_view(view:MK_View,superView:MK_View,size:CGSize,alignType:AlignType = .center)->NSMutableAttributedString{
+        let acc = MK_Accessory.init(con: NSMutableAttributedString.ContentType.view(view,size,superView), ali: alignType)
+        return acc.turnToAttrStr()
+    }
     
 }
 
@@ -42,7 +48,9 @@ public extension NSMutableAttributedString {
 ///富文本中附件
 class MK_Accessory:NSObject {
 
-    static var MK_Accessory_AttributeKeyStr = "MK_Accessory_AttributeKeyStr"
+    static var AttributeKeyStr = "MK_Accessory_AttributeKeyStr"
+
+    static let Attribute_PlaceholderStr = " "
 
     var content:NSMutableAttributedString.ContentType!
 
@@ -60,6 +68,7 @@ class MK_Accessory:NSObject {
         var MK_Accessory_Descent:CGFloat = 0.0
     }
 
+    ///附件大小信息
     var acc_Size = AccessorySize.init()
 
     ///转换为属性字符串
@@ -67,7 +76,7 @@ class MK_Accessory:NSObject {
 
 
         switch content! {
-        case .image(let (_, size)),.view(let (_, size)):
+        case .image(let (_, size)),.view(let (_, size, _)):
             acc_Size.MK_Accessory_Width = size.width
             acc_Size.MK_Accessory_Height = size.height
         }
@@ -95,10 +104,26 @@ class MK_Accessory:NSObject {
             return t.MK_Accessory_Width
         }
 
-        let res = NSMutableAttributedString.init(string: " ")
+        let res = NSMutableAttributedString.init(string: MK_Accessory.Attribute_PlaceholderStr)
         let delegate = CTRunDelegateCreate(&callBack, &acc_Size)!
-        res.addAttributes([NSAttributedStringKey.init(kCTRunDelegateAttributeName as String) : delegate,NSAttributedStringKey.init(MK_Accessory.MK_Accessory_AttributeKeyStr):self], range: NSRange.init(location: 0, length: res.length))
+        res.addAttributes([NSAttributedStringKey.init(kCTRunDelegateAttributeName as String) : delegate,NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr):self], range: NSRange.init(location: 0, length: res.length))
         return res
+    }
+}
+
+
+extension NSAttributedString {
+
+    ///获取富文本中附件大小
+    func getAccessorySize()->MK_Accessory.AccessorySize?{
+        guard self.string != MK_Accessory.Attribute_PlaceholderStr else { return nil }
+        var size:MK_Accessory.AccessorySize? = nil
+        self.enumerateAttributes(in: self.range, options: NSAttributedString.EnumerationOptions.init(rawValue: 1)) { (dic, ran, boolP) in
+            if let acc = dic[NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr)] as? MK_Accessory {
+                  size = acc.acc_Size
+            }
+        }
+        return size
     }
 
 }

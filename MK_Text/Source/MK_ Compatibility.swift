@@ -33,5 +33,12 @@
 
 #else
 
+    extension MK_Image {
+        var CGImage:CGImage{
+            get{
+                return self.cgImage!
+            }
+        }
+    }
 
 #endif
