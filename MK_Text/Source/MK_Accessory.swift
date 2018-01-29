@@ -71,6 +71,7 @@ class MK_Accessory:NSObject {
     ///附件大小信息
     var acc_Size = AccessorySize.init()
 
+
     ///转换为属性字符串
     func turnToAttrStr()->NSMutableAttributedString{
 
@@ -82,9 +83,9 @@ class MK_Accessory:NSObject {
         }
         switch align! {
         case .center:
-            acc_Size.MK_Accessory_Descent = acc_Size.MK_Accessory_Height * 0.25
-        case .bottom:
             acc_Size.MK_Accessory_Descent = 0.0
+        case .bottom:
+            acc_Size.MK_Accessory_Descent = -acc_Size.MK_Accessory_Height * 0.5
         case .top:
             acc_Size.MK_Accessory_Descent = acc_Size.MK_Accessory_Height * 0.5
         case .custom(let (cus)):
@@ -97,7 +98,7 @@ class MK_Accessory:NSObject {
             return t.MK_Accessory_Height
         }, getDescent: { (p) -> CGFloat in
             let t = UnsafeMutablePointer<AccessorySize>.init(OpaquePointer(p)).pointee
-    
+
             return t.MK_Accessory_Descent
         }) { (p) -> CGFloat in
             let t = UnsafeMutablePointer<AccessorySize>.init(OpaquePointer(p)).pointee
@@ -111,19 +112,36 @@ class MK_Accessory:NSObject {
     }
 }
 
+extension MK_Accessory {
+    
+    ///中心对附件顶边的距离
+    var CenterToTop:CGFloat{
+        get{
+            return acc_Size.MK_Accessory_Height - acc_Size.MK_Accessory_Descent
+        }
+    }
+    ///中心对附件底边的距离
+    var CenterToBottom:CGFloat{
+        get{
+            return acc_Size.MK_Accessory_Height + acc_Size.MK_Accessory_Descent
+        }
+    }
+
+}
+
 
 extension NSAttributedString {
 
     ///获取富文本中附件大小
-    func getAccessorySize()->MK_Accessory.AccessorySize?{
+    func getAccessory()->MK_Accessory?{
         guard self.string != MK_Accessory.Attribute_PlaceholderStr else { return nil }
-        var size:MK_Accessory.AccessorySize? = nil
+        var res:MK_Accessory? = nil
         self.enumerateAttributes(in: self.range, options: NSAttributedString.EnumerationOptions.init(rawValue: 1)) { (dic, ran, boolP) in
             if let acc = dic[NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr)] as? MK_Accessory {
-                  size = acc.acc_Size
+                res = acc
             }
         }
-        return size
+        return res
     }
 
 }

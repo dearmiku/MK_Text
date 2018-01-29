@@ -16,10 +16,15 @@ struct MK_TextLine{
 
     var sentenceArr:[MK_Text_Sentence_Protocol]
 
-    var lineStartPoint:CGPoint
+    var lineStartCenterPoint:CGPoint
 
     func drawInContext(context:CGContext,size:CGSize){
-        
+        var startX = lineStartCenterPoint.x
+        for item in sentenceArr {
+            let size = item.size
+            item.drawInContext(context: context, startCenterPoint: CGPoint.init(x: startX, y: lineStartCenterPoint.y))
+            startX += size.width
+        }
     }
 
 }

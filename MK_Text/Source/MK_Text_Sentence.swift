@@ -11,42 +11,54 @@ import CoreGraphics
 import CoreText
 
 ///绘制字句协议
-protocol MK_Text_Sentence_Protocol : NSObjectProtocol {
+protocol MK_Text_Sentence_Protocol {
 
     ///绘制大小
-    var size:CGSize! { get }
+    var size:CGSize { get }
 
     ///在指定context 和 起点(左上角)进行绘制
-    func drawInContext(context:CGContext,startPoint:CGPoint)
+    func drawInContext(context:CGContext,startCenterPoint:CGPoint)
 
 }
 
 ///绘制字句--字符串
-class MK_Text_SenTence_String : NSObject, MK_Text_Sentence_Protocol {
+class MK_Text_SenTence_String : MK_Text_Sentence_Protocol {
 
-    var str:NSMutableAttributedString!
+    var str:NSMutableAttributedString
 
-    var size:CGSize!
+    var size:CGSize
 
-    func drawInContext(context:CGContext,startPoint:CGPoint){
+    init(string:NSMutableAttributedString,strSize:CGSize) {
+        str = string
+        size = strSize
+    }
+
+
+    func drawInContext(context:CGContext,startCenterPoint:CGPoint){
         let frameSetter = CTFramesetterCreateWithAttributedString(str)
-        let drawRec = CGRect.init(origin: startPoint, size: size)
+        let drawRec = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: (startCenterPoint.y - size.height)*0.5), size: size)
         let frame = CTFramesetterCreateFrame(frameSetter, CFRange.init(location: 0, length: str.length), CGPath.init(rect: drawRec, transform: nil), nil)
         CTFrameDraw(frame, context)
     }
-
+    
 }
 
 ///绘制字句--附件
-class MK_Text_SenTence_Accessory : NSObject, MK_Text_Sentence_Protocol {
+class MK_Text_SenTence_Accessory : MK_Text_Sentence_Protocol {
 
-    var acc:MK_Accessory!
+    var acc:MK_Accessory
 
-    var size:CGSize!
+    var size:CGSize
 
-    func drawInContext(context:CGContext,startPoint:CGPoint){
+    init(accessory: MK_Accessory, accSize: CGSize){
+        acc = accessory
+        size = accSize
+    }
 
-        let rect = CGRect.init(origin: startPoint, size: size)
+    func drawInContext(context:CGContext,startCenterPoint:CGPoint){
+
+        let accSize = acc.acc_Size
+        let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: (((startCenterPoint.y - size.height)*0.5) - accSize.MK_Accessory_Descent )), size: size)
         switch acc.content! {
         case .image(let(im, _ )):
             context.draw(im.CGImage, in: rect)
