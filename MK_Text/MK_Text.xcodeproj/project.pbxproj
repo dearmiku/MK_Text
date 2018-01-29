@@ -32,6 +32,8 @@
 		10183B3F201AF3510064C06F /* MK_TextLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10183B3D201AF3510064C06F /* MK_TextLayout.swift */; };
 		10183B41201AF3870064C06F /* MK_Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10183B40201AF3870064C06F /* MK_Label.swift */; };
 		10183B42201AF3870064C06F /* MK_Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10183B40201AF3870064C06F /* MK_Label.swift */; };
+		10DE75AE201B25C100E94B0A /* MK_TextLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE75AD201B25C100E94B0A /* MK_TextLine.swift */; };
+		10DE75AF201B25C100E94B0A /* MK_TextLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE75AD201B25C100E94B0A /* MK_TextLine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +59,7 @@
 		10183B3A2019D4DD0064C06F /* MK_Accessory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MK_Accessory.swift; sourceTree = "<group>"; };
 		10183B3D201AF3510064C06F /* MK_TextLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MK_TextLayout.swift; sourceTree = "<group>"; };
 		10183B40201AF3870064C06F /* MK_Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MK_Label.swift; sourceTree = "<group>"; };
+		10DE75AD201B25C100E94B0A /* MK_TextLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MK_TextLine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +131,7 @@
 				10183B2B2019BA8B0064C06F /* MK_RuntimeObserver.swift */,
 				10183B342019D14D0064C06F /* MK_ Compatibility.swift */,
 				10183B3D201AF3510064C06F /* MK_TextLayout.swift */,
+				10DE75AD201B25C100E94B0A /* MK_TextLine.swift */,
 				10183B292019BA8B0064C06F /* MK_AsyncView.swift */,
 				10183B2A2019BA8B0064C06F /* MK_AsyncTask.swift */,
 				10183B3A2019D4DD0064C06F /* MK_Accessory.swift */,
@@ -247,6 +251,7 @@
 				10183B2C2019BA8B0064C06F /* MK_AsyncView.swift in Sources */,
 				10183AF12019B7230064C06F /* AppDelegate.swift in Sources */,
 				10183B3E201AF3510064C06F /* MK_TextLayout.swift in Sources */,
+				10DE75AE201B25C100E94B0A /* MK_TextLine.swift in Sources */,
 				10183B302019BA8B0064C06F /* MK_RuntimeObserver.swift in Sources */,
 				10183B382019D3E50064C06F /* MK_Extension.swift in Sources */,
 				10183B352019D14D0064C06F /* MK_ Compatibility.swift in Sources */,
@@ -264,6 +269,7 @@
 				10183B2D2019BA8B0064C06F /* MK_AsyncView.swift in Sources */,
 				10183B1B2019B8030064C06F /* AppDelegate.swift in Sources */,
 				10183B3F201AF3510064C06F /* MK_TextLayout.swift in Sources */,
+				10DE75AF201B25C100E94B0A /* MK_TextLine.swift in Sources */,
 				10183B312019BA8B0064C06F /* MK_RuntimeObserver.swift in Sources */,
 				10183B392019D3E50064C06F /* MK_Extension.swift in Sources */,
 				10183B362019D14D0064C06F /* MK_ Compatibility.swift in Sources */,
