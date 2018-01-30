@@ -92,22 +92,8 @@ class MK_Accessory:NSObject {
             acc_Size.MK_Accessory_Descent = cus
         }
 
-        var callBack = CTRunDelegateCallbacks.init(version: kCTRunDelegateVersion1, dealloc: { (_) in
-        }, getAscent: { (p) -> CGFloat in
-            let t = UnsafeMutablePointer<AccessorySize>.init(OpaquePointer(p)).pointee
-            return t.MK_Accessory_Height
-        }, getDescent: { (p) -> CGFloat in
-            let t = UnsafeMutablePointer<AccessorySize>.init(OpaquePointer(p)).pointee
-
-            return t.MK_Accessory_Descent
-        }) { (p) -> CGFloat in
-            let t = UnsafeMutablePointer<AccessorySize>.init(OpaquePointer(p)).pointee
-            return t.MK_Accessory_Width
-        }
-
         let res = NSMutableAttributedString.init(string: MK_Accessory.Attribute_PlaceholderStr)
-        let delegate = CTRunDelegateCreate(&callBack, &acc_Size)!
-        res.addAttributes([NSAttributedStringKey.init(kCTRunDelegateAttributeName as String) : delegate,NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr):self], range: NSRange.init(location: 0, length: res.length))
+        res.addAttributes([NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr):self], range: NSRange.init(location: 0, length: res.length))
         return res
     }
 }
@@ -117,13 +103,13 @@ extension MK_Accessory {
     ///中心对附件顶边的距离
     var CenterToTop:CGFloat{
         get{
-            return acc_Size.MK_Accessory_Height - acc_Size.MK_Accessory_Descent
+            return acc_Size.MK_Accessory_Height * 0.5 - acc_Size.MK_Accessory_Descent
         }
     }
     ///中心对附件底边的距离
     var CenterToBottom:CGFloat{
         get{
-            return acc_Size.MK_Accessory_Height + acc_Size.MK_Accessory_Descent
+            return acc_Size.MK_Accessory_Height * 0.5 + acc_Size.MK_Accessory_Descent
         }
     }
 
@@ -134,12 +120,15 @@ extension NSAttributedString {
 
     ///获取富文本中附件大小
     func getAccessory()->MK_Accessory?{
-        guard self.string != MK_Accessory.Attribute_PlaceholderStr else { return nil }
+
+        guard self.string == MK_Accessory.Attribute_PlaceholderStr else { return nil }
+
         var res:MK_Accessory? = nil
         self.enumerateAttributes(in: self.range, options: NSAttributedString.EnumerationOptions.init(rawValue: 1)) { (dic, ran, boolP) in
             if let acc = dic[NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr)] as? MK_Accessory {
                 res = acc
             }
+
         }
         return res
     }

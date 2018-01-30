@@ -34,7 +34,7 @@ class MK_TextLayout:NSObject{
         var currentBottomLineY = CGFloat(0)
         var lineArr:[MK_TextLine] = []
 
-        getMK_LineAndJudgeIsCancel(str: str, maxWidth: drawSize.width) { (line, lineHeight) -> (Bool) in
+        getMK_LineAndJudgeIsCancel(str: str, maxWidth: drawSize.width,maxHight:drawSize.height) { (line, lineHeight) -> (Bool) in
             lineArr.append(line)
             currentBottomLineY += lineHeight
             return currentBottomLineY >= drawSize.height
@@ -46,8 +46,7 @@ class MK_TextLayout:NSObject{
 
 
     ///获得line 并判断是否继续
-    func getMK_LineAndJudgeIsCancel(str:NSMutableAttributedString,maxWidth:CGFloat,isCancel:@escaping (MK_TextLine,CGFloat)->(Bool)){
-
+    func getMK_LineAndJudgeIsCancel(str:NSMutableAttributedString,maxWidth:CGFloat,maxHight:CGFloat,isCancel:@escaping (MK_TextLine,CGFloat)->(Bool)){
         guard str.length != 0 else { return }
 
         var currentXR = CGFloat(0)
@@ -65,29 +64,35 @@ class MK_TextLayout:NSObject{
         var sentenceArr:[MK_Text_Sentence_Protocol] = []
 
 
+        ///向外输出Line 并判断是否继续解析~
+        func getCanelResultAndOutLine()->Bool{
+            if let beforeSec = sentence {
+                sentenceArr.append(beforeSec)
+            }
+            let line = MK_TextLine.init(sentenceArr: sentenceArr, lineStartCenterPoint: CGPoint.init(x: 0, y:  maxHight - currentYR - (currentCenterToTop + currentCenterToBottom)*0.5))
+
+            return isCancel(line,currentCenterToBottom + currentCenterToTop)
+        }
+
         ///当宽度越界
         func whenWidthIsOutofBorder()->Bool{
-
             if cW + currentXR >= maxWidth {
-                if let beforeSec = sentence {
-                    sentenceArr.append(beforeSec)
-                }
 
-
-                let line = MK_TextLine.init(sentenceArr: sentenceArr, lineStartCenterPoint: CGPoint.init(x: 0, y: currentYR))
-
-                let isCancelRes = isCancel(line,currentCenterToBottom + currentCenterToTop)
+                let isCancelRes = getCanelResultAndOutLine()
                 ///换行处理
                 if !isCancelRes {
 
                     currentYR += (currentCenterToTop + currentCenterToBottom)
                     currentXR = CGFloat(0)
                     sentenceArr.removeAll()
+                    sentence = nil
                 }
                 return isCancelRes
             }
             return false
         }
+
+
 
 
         //遍历富文本
@@ -117,8 +122,6 @@ class MK_TextLayout:NSObject{
                 }
                 sentence = MK_Text_SenTence_Accessory.init(accessory: acc, accSize: CGSize.init(width: acc.acc_Size.MK_Accessory_Width, height: acc.acc_Size.MK_Accessory_Height))
 
-
-
                 ///普通富文本串
             }else{
                 let size = cha.mk_size
@@ -137,11 +140,18 @@ class MK_TextLayout:NSObject{
                 if let beforeSec = sentence as? MK_Text_SenTence_String{
                     beforeSec.str.append(cha)
                     beforeSec.size.width += size.width
-                    beforeSec.size.height += size.height
+                    beforeSec.size.height = currentCenterToBottom + currentCenterToTop
                 }else{
+                    if sentence != nil {
+                        sentenceArr.append(sentence!)
+                        sentence = nil
+                    }
                     sentence = MK_Text_SenTence_String.init(string: NSMutableAttributedString.init(attributedString: cha), strSize: size)
                 }
             }
         }
+        
+        _ = getCanelResultAndOutLine()
+
     }
 }
