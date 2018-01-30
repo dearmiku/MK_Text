@@ -13,10 +13,6 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        let lay = MK_TextLayout()
-//        let size = CGSize.init(width: 30, height: 300)
-//        let str = NSMutableAttributedString.init(string: "gfiyusdg;olaujfusgbahu,eipomfjjsbgfw;ghiawq3")
-//        print(lay.layout(str: str, drawSize: size))
 
         
         let ml = MK_Label()

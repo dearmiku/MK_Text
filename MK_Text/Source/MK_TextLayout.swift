@@ -69,7 +69,10 @@ class MK_TextLayout:NSObject{
             if let beforeSec = sentence {
                 sentenceArr.append(beforeSec)
             }
-            let line = MK_TextLine.init(sentenceArr: sentenceArr, lineStartCenterPoint: CGPoint.init(x: 0, y:  maxHight - currentYR - (currentCenterToTop + currentCenterToBottom)*0.5))
+
+            let y = maxHight - currentYR - (currentCenterToTop + currentCenterToBottom)*0.5
+
+            let line = MK_TextLine.init(sentenceArr: sentenceArr, lineStartCenterPoint: CGPoint.init(x: 0, y: y))
 
             return isCancel(line,currentCenterToBottom + currentCenterToTop)
         }
