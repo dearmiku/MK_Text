@@ -12,11 +12,13 @@
     import AppKit
     public typealias MK_View = NSView
     public typealias MK_Image = NSImage
+    public typealias MK_TapGes = NSClickGestureRecognizer
 
 #else
     import UIKit
     public typealias MK_View = UIView
     public typealias MK_Image = UIImage
+    public typealias MK_TapGes = UITapGestureRecognizer
 
 #endif
 
@@ -31,8 +33,8 @@
         }
     }
 
-#else
 
+#else
     extension MK_Image {
         var CGImage:CGImage{
             get{

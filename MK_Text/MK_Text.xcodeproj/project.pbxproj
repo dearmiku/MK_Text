@@ -36,6 +36,8 @@
 		10DE75AF201B25C100E94B0A /* MK_TextLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE75AD201B25C100E94B0A /* MK_TextLine.swift */; };
 		10DE75B5201EFB8200E94B0A /* MK_Text_Sentence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE75B4201EFB8200E94B0A /* MK_Text_Sentence.swift */; };
 		10DE75B6201EFB8200E94B0A /* MK_Text_Sentence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE75B4201EFB8200E94B0A /* MK_Text_Sentence.swift */; };
+		10DE75B82020366E00E94B0A /* MK_TapString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE75B72020366E00E94B0A /* MK_TapString.swift */; };
+		10DE75B92020366E00E94B0A /* MK_TapString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE75B72020366E00E94B0A /* MK_TapString.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +65,7 @@
 		10183B40201AF3870064C06F /* MK_Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MK_Label.swift; sourceTree = "<group>"; };
 		10DE75AD201B25C100E94B0A /* MK_TextLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MK_TextLine.swift; sourceTree = "<group>"; };
 		10DE75B4201EFB8200E94B0A /* MK_Text_Sentence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MK_Text_Sentence.swift; sourceTree = "<group>"; };
+		10DE75B72020366E00E94B0A /* MK_TapString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MK_TapString.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +141,7 @@
 				10183B292019BA8B0064C06F /* MK_AsyncView.swift */,
 				10183B2A2019BA8B0064C06F /* MK_AsyncTask.swift */,
 				10183B3A2019D4DD0064C06F /* MK_Accessory.swift */,
+				10DE75B72020366E00E94B0A /* MK_TapString.swift */,
 				10183B372019D3E50064C06F /* MK_Extension.swift */,
 				10DE75AD201B25C100E94B0A /* MK_TextLine.swift */,
 				10183B40201AF3870064C06F /* MK_Label.swift */,
@@ -259,6 +263,7 @@
 				10DE75AE201B25C100E94B0A /* MK_TextLine.swift in Sources */,
 				10183B302019BA8B0064C06F /* MK_RuntimeObserver.swift in Sources */,
 				10183B382019D3E50064C06F /* MK_Extension.swift in Sources */,
+				10DE75B82020366E00E94B0A /* MK_TapString.swift in Sources */,
 				10183B352019D14D0064C06F /* MK_ Compatibility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,6 +283,7 @@
 				10DE75AF201B25C100E94B0A /* MK_TextLine.swift in Sources */,
 				10183B312019BA8B0064C06F /* MK_RuntimeObserver.swift in Sources */,
 				10183B392019D3E50064C06F /* MK_Extension.swift in Sources */,
+				10DE75B92020366E00E94B0A /* MK_TapString.swift in Sources */,
 				10183B362019D14D0064C06F /* MK_ Compatibility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

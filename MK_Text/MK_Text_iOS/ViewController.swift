@@ -29,10 +29,6 @@ class ViewController: UIViewController {
 
         ml.text = str
         self.view.addSubview(ml)
-
-
     }
-
-
 }
 

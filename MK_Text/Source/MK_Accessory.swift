@@ -85,11 +85,11 @@ class MK_Accessory:NSObject {
         case .center:
             acc_Size.MK_Accessory_Descent = 0.0
         case .bottom:
-            acc_Size.MK_Accessory_Descent = -acc_Size.MK_Accessory_Height * 0.5
+            acc_Size.MK_Accessory_Descent = -acc_Size.MK_Accessory_Height * 0.25
         case .top:
-            acc_Size.MK_Accessory_Descent = acc_Size.MK_Accessory_Height * 0.5
+            acc_Size.MK_Accessory_Descent = acc_Size.MK_Accessory_Height * 0.25
         case .custom(let (cus)):
-            acc_Size.MK_Accessory_Descent = cus
+            acc_Size.MK_Accessory_Descent = cus * CGFloat(0.5)
         }
 
         let res = NSMutableAttributedString.init(string: MK_Accessory.Attribute_PlaceholderStr)
@@ -118,21 +118,14 @@ extension MK_Accessory {
 
 extension NSAttributedString {
 
-    ///获取富文本中附件大小
+    ///获取富文本中附件
     func getAccessory()->MK_Accessory?{
-
         guard self.string == MK_Accessory.Attribute_PlaceholderStr else { return nil }
 
-        var res:MK_Accessory? = nil
-        self.enumerateAttributes(in: self.range, options: NSAttributedString.EnumerationOptions.init(rawValue: 1)) { (dic, ran, boolP) in
-            if let acc = dic[NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr)] as? MK_Accessory {
-                res = acc
-            }
+        let res : MK_Accessory? = self.getAttributeValue(name: MK_Accessory.AttributeKeyStr)
 
-        }
         return res
     }
-
 }
 
 

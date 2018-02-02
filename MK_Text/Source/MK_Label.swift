@@ -6,15 +6,17 @@
 //  Copyright © 2018年 MBP. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
+#if os(macOS)
+    import AppKit
+#else
+    import UIKit
+#endif
 
 public class MK_Label:MK_AsyncView{
 
     ///富文本
-    var text:NSMutableAttributedString?
-
-
+    public var text:NSMutableAttributedString?
 
     fileprivate let layout = MK_TextLayout()
 
@@ -31,7 +33,7 @@ public class MK_Label:MK_AsyncView{
         self.setNewTask(task: labelTask)
     }
 
-    //绘制任务
+    ///绘制任务
     fileprivate lazy var labelTask = { () -> MK_AsyncTask in
         var task = MK_AsyncTask()
         task.disPlayBlock = {[weak self] (context,size)->() in
@@ -48,4 +50,30 @@ public class MK_Label:MK_AsyncView{
         return task
     }()
 
+    ///获取点击
+    fileprivate func clickLabel(point:CGPoint){
+        let tap = layout.getTapString(point: point)
+        guard let str = tap?.str else { return }
+        tap?.clickBlock(str)
+    }
 }
+
+#if os(macOS)
+
+    extension MK_Label {
+        public override func mouseDown(with event: NSEvent) {
+            let location = self.convert(event.locationInWindow, to: nil)
+            clickLabel(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y))
+        }
+    }
+
+#else
+    extension MK_Label {
+        public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+            guard let location = touches.first?.location(in: self) else { return }
+            clickLabel(point: location)
+        }
+    }
+
+#endif
+

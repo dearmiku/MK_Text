@@ -13,11 +13,13 @@ import CoreText
 
 ///绘制字行~
 struct MK_TextLine{
-
+    
     var sentenceArr:[MK_Text_Sentence_Protocol]
-
+    
     var lineStartCenterPoint:CGPoint
-
+    
+    var lineHeight:CGFloat
+    
     func drawInContext(context:CGContext,size:CGSize){
         var startX = lineStartCenterPoint.x
         for item in sentenceArr {
@@ -26,8 +28,27 @@ struct MK_TextLine{
             startX += size.width
         }
     }
-
 }
 
-
+extension MK_TextLine {
+    
+    func getAttrbuteStrAt(point:CGPoint)->NSAttributedString?{
+        var wi = CGFloat(0.0)
+        for item in sentenceArr {
+            if wi + item.size.width >= point.x && point.x > wi && item is MK_Text_SenTence_String{
+                let str = (item as! MK_Text_SenTence_String).str
+                print(str.string)
+                let framesetter = CTFramesetterCreateWithAttributedString(str)
+                let frame = CTFramesetterCreateFrame(framesetter, CFRange.init(location: 0, length: str.length), CGPath.init(rect: CGRect.init(origin: CGPoint.zero, size: CGSize.init(width: INTPTR_MAX, height: INTPTR_MAX)), transform: nil), nil)
+                let line = unsafeBitCast(CFArrayGetValueAtIndex(CTFrameGetLines(frame), 0), to: CTLine.self)
+                let clickPoint = CGPoint.init(x: point.x - wi, y: (str.mk_size.height)*0.5)
+                let starIndex = CTLineGetStringIndexForPosition(line, clickPoint)
+                let res = str.attributedSubstring(from: NSRange.init(location: starIndex, length: 1))
+                return res
+            }
+            wi += item.size.width
+        }
+        return nil
+    }
+}
 

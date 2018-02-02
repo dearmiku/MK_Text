@@ -24,7 +24,6 @@ struct MK_AsyncTask{
         disPlayBlock = nil
         disPlayBlock = nil
     }
-
 }
 
 
