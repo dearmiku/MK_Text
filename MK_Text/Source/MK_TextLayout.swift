@@ -39,8 +39,11 @@ extension MK_TextLayout {
 
         guard let arr = lineArray else { return nil }
         guard let line = getLineAt(point: point, arr: arr) else { return nil }
+        
         guard let str = line.getAttrbuteStrAt(point: point) else { return nil }
+
         guard let res = str.getTapStringAttr() else { return nil }
+        
         return res
     }
     
@@ -108,8 +111,9 @@ extension MK_TextLayout {
         
         ///当宽度越界
         func whenWidthIsOutofBorder()->Bool{
+
             if cW + currentXR >= maxWidth {
-                
+
                 let isCancelRes = getCanelResultAndOutLine()
                 ///换行处理
                 if !isCancelRes {
@@ -136,7 +140,11 @@ extension MK_TextLayout {
                 ctt = acc.CenterToTop
                 ctb = acc.CenterToBottom
                 cW = acc.acc_Size.MK_Accessory_Width
-                
+
+                print(ctt)
+                print(ctb)
+                print("===")
+
                 ///越界判断
                 guard !whenWidthIsOutofBorder() else { return }
                 

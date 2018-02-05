@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import CoreText
 
 class MK_TapManager {
 
@@ -35,7 +35,6 @@ class MK_TapManager {
         guard let str1 = currentAttStr else { return }
         view.text = str1
         view.draw(view.bounds)
-
 
         guard let tap1 = currentTapAtt else { return }
         guard let tapNow = view.layout.getTapString(point: point) else { return }

@@ -34,13 +34,14 @@ class MK_Text_SenTence_String : MK_Text_Sentence_Protocol {
     }
 
     func drawInContext(context:CGContext,startCenterPoint:CGPoint){
+
         let frameSetter = CTFramesetterCreateWithAttributedString(str)
         let strSize = str.mk_size
-        let y = startCenterPoint.y - strSize.height*0.5
+        let y = startCenterPoint.y - strSize.height * 0.5
         let drawRec = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: strSize)
-
         let frame = CTFramesetterCreateFrame(frameSetter, CFRange.init(location: 0, length: str.length), CGPath.init(rect: drawRec, transform: nil), nil)
         CTFrameDraw(frame, context)
+
     }
 }
 
@@ -61,9 +62,7 @@ class MK_Text_SenTence_Accessory : MK_Text_Sentence_Protocol {
     func drawInContext(context:CGContext,startCenterPoint:CGPoint){
 
         let accSize = acc.acc_Size
-     
         let y = startCenterPoint.y - accSize.MK_Accessory_Height*0.5 - accSize.MK_Accessory_Descent
-
         let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: size)
 
         switch acc.content! {

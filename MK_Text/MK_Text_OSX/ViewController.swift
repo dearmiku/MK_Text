@@ -13,44 +13,32 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        //        let point = CGPoint.init(x: 45, y: 3)
-        //        let str = NSMutableAttributedString.init(string: "r6t8yadmlhjamnxhwevbdlhsaj2s")
-        //        let framesetter = CTFramesetterCreateWithAttributedString(str)
-        //        let frame = CTFramesetterCreateFrame(framesetter, CFRange.init(location: 0, length: str.length), CGPath.init(rect: CGRect.init(origin: CGPoint.zero, size: CGSize.init(width: INTPTR_MAX, height: INTPTR_MAX)), transform: nil), nil)
-        //        let line = unsafeBitCast(CFArrayGetValueAtIndex(CTFrameGetLines(frame), 0), to: CTLine.self)
-        //        let clickPoint = CGPoint.init(x: point.x, y: (str.mk_size.height)*0.5)
-        //        let starIndex = CTLineGetStringIndexForPosition(line, clickPoint)
-        //        print(starIndex)
-
-
 
         let ml = MK_Label()
         ml.frame = CGRect.init(x: 0, y: 0, width: 100, height: 100)
-        var str = NSMutableAttributedString.init(string: "a")
+        let str = NSMutableAttributedString.init(string: "miku")
         str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 20), range: NSRange.init(location: 0, length: str.length))
-        
-        //let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.top)
-
-        //str.append(imStr)
 
 
-        str.append(NSAttributedString.init(string: "123"))
+        let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.top)
+        str.append(imStr)
 
-        let tap = NSMutableAttributedString.init(string: "bb")
+
+
+        let tap = NSMutableAttributedString.init(string: "可点击字符")
         let response = MK_TapResponse.init(highlitedBlock: { (str) -> [NSAttributedStringKey : Any]? in
             return [NSAttributedStringKey.foregroundColor : NSColor.red]
         }) { (str, range) in
-
+            print("点击字符串~")
         }
         tap.addTapAttr(response: response, range: nil)
-
         str.append(tap)
+
+
 
         ml.text = str
         self.view.addSubview(ml)
-        
-        
+
     }
 }
 

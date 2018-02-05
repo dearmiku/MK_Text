@@ -45,10 +45,10 @@ extension NSAttributedString {
     }
 
     ///获取指定属性的值~
-    func getAttributeValue<R>(name:String)->R?{
+    func getAttributeValue<R>(name:NSAttributedStringKey)->R?{
         var res:R? = nil
         self.enumerateAttributes(in: self.range, options: NSAttributedString.EnumerationOptions.init(rawValue: 1)) { (dic, ran, boolP) in
-            if let acc = dic[NSAttributedStringKey.init(name)] as? R {
+            if let acc = dic[name] as? R {
                 res = acc
             }
         }

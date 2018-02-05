@@ -58,7 +58,6 @@ class MK_TapStringAttr : NSObject {
 
 }
 
-
 public extension NSMutableAttributedString {
 
     ///向富文本添加剪辑属性~ range为nil 则对整个富文本添加
@@ -67,15 +66,22 @@ public extension NSMutableAttributedString {
         let att = MK_TapStringAttr()
         att.response = response
         self.addAttributes([NSAttributedStringKey.init(MK_TapStringAttr.AttributeKey) : att], range: addRange)
+
+        #if os(macOS)
+        if self.getAttributeValue(name: NSAttributedStringKey.font) == nil {
+
+            self.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 10), range: self.range)
+        }
+        #endif
+
     }
 
 }
 
-
 extension NSAttributedString {
 
     func getTapStringAttr()->MK_TapStringAttr? {
-        let res:MK_TapStringAttr? = self.getAttributeValue(name: MK_TapStringAttr.AttributeKey)
+        let res:MK_TapStringAttr? = self.getAttributeValue(name: NSAttributedStringKey.init(MK_TapStringAttr.AttributeKey))
         return res
     }
 }

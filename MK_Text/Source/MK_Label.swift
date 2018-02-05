@@ -90,8 +90,14 @@ public class MK_Label:MK_AsyncView{
 #else
     extension MK_Label {
         public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+            
             guard let location = touches.first?.location(in: self) else { return }
             tapDownAt(point: location)
+        }
+        public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+            
+            guard let location = touches.first?.location(in: self) else { return }
+            tapUpAt(point: location)
         }
     }
 

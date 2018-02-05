@@ -121,9 +121,7 @@ extension NSAttributedString {
     ///获取富文本中附件
     func getAccessory()->MK_Accessory?{
         guard self.string == MK_Accessory.Attribute_PlaceholderStr else { return nil }
-
-        let res : MK_Accessory? = self.getAttributeValue(name: MK_Accessory.AttributeKeyStr)
-
+        let res : MK_Accessory? = self.getAttributeValue(name: NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr))
         return res
     }
 }
