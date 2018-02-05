@@ -23,11 +23,36 @@ class MK_TapStringAttr : NSObject {
 
     var str:NSAttributedString!
 
+    var id:Int = Int(NSDate.init().timeIntervalSince1970)
+
     init(tapBlock:@escaping MK_TapString_Block) {
         super.init()
         clickBlock = tapBlock
     }
-    
+
+    ///获取在指定富文本中的Range
+    func getRangeIn(attStr:NSAttributedString)->NSRange?{
+
+        var res:NSRange? = nil
+        attStr.enumerateAttributes(in: attStr.range, options: NSAttributedString.EnumerationOptions.init(rawValue: 1)) { (dic, range, isCancel) in
+            if let att = dic[NSAttributedStringKey.init(MK_TapStringAttr.AttributeKey)] as? MK_TapStringAttr {
+                if att.id == self.id{
+                    if res == nil {
+                        res = range
+                    }else {
+                        if range.location < res!.location {
+                            res?.location = range.location
+                        }
+                        if range.length + range.location > res!.length + res!.location {
+                            res!.length = range.length + range.location - res!.location
+                        }
+                    }
+                }
+            }
+        }
+        return res
+    }
+
 }
 
 public extension NSAttributedString {
@@ -37,12 +62,13 @@ public extension NSAttributedString {
         let tap = MK_TapStringAttr.init(tapBlock: clickBlock)
         tap.str = self
         res.addAttribute(NSAttributedStringKey.init(MK_TapStringAttr.AttributeKey), value: tap, range: self.range)
-        return res
+            return res
     }
 
 }
 
 extension NSAttributedString {
+
     func getTapStringAttr()->MK_TapStringAttr? {
         let res:MK_TapStringAttr? = self.getAttributeValue(name: MK_TapStringAttr.AttributeKey)
         return res

@@ -13,10 +13,21 @@ import CoreGraphics
     import UIKit
 #endif
 
+
+
 public class MK_Label:MK_AsyncView{
 
     ///富文本
-    public var text:NSMutableAttributedString?
+    public var text:NSMutableAttributedString? {
+        didSet{
+            self.draw(self.bounds)
+        }
+    }
+
+    public func reDraw(){
+        self.draw(self.bounds)
+    }
+
 
     fileprivate let layout = MK_TextLayout()
 
@@ -52,9 +63,14 @@ public class MK_Label:MK_AsyncView{
 
     ///获取点击
     fileprivate func clickLabel(point:CGPoint){
-        let tap = layout.getTapString(point: point)
-        guard let str = tap?.str else { return }
-        tap?.clickBlock(str)
+        guard let str = text else { return }
+        guard let tap = layout.getTapString(point: point) else { return }
+        let range = tap.getRangeIn(attStr: str)
+        let s = text?.attributedSubstring(from: range!)
+        print(range)
+        print(s?.string)
+
+        tap.clickBlock(tap.str)
     }
 }
 

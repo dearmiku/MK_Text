@@ -124,13 +124,13 @@ extension MK_TextLayout {
             return false
         }
         
-        
+
         //MARK:- 遍历富文本
         for i in 0..<str.length{
-            
-            let cha = str.attributedSubstring(from: currentRange)
+
             currentRange.location = i
-            
+            let cha = str.attributedSubstring(from: currentRange)
+
             //是否为附件类型
             if let acc = cha.getAccessory() {
                 ctt = acc.CenterToTop
@@ -178,8 +178,7 @@ extension MK_TextLayout {
                     }
                     sentence = MK_Text_SenTence_String.init(string: NSMutableAttributedString.init(attributedString: cha), strSize: size)
                 }
-                
-                
+
             }
         }
         _ = getCanelResultAndOutLine()

@@ -28,16 +28,18 @@ class ViewController: NSViewController {
         var str = NSMutableAttributedString.init(string: "a")
         str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 20), range: NSRange.init(location: 0, length: str.length))
         
-        let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.top)
+        //let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.top)
         
         
         
-        str.append(imStr)
-        str.append(NSAttributedString.init(string: "0000009999999"))
+        //str.append(imStr)
+        str.append(NSAttributedString.init(string: "123"))
         str = str.mk_tap { (str) in
             
         }
-        
+
+        str.append(NSAttributedString.init(string: "456"))
+
         ml.text = str
         self.view.addSubview(ml)
         
