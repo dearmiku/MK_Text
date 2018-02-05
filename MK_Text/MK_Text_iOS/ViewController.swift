@@ -35,13 +35,9 @@ class ViewController: UIViewController {
         str.append(tap)
 
 
-//        let v = UIButton.init(type: UIButtonType.system)
-//        v.backgroundColor = UIColor.red
-//        let viewStr = NSMutableAttributedString.mk_view(view: v, superView: ml, size: CGSize.init(width: 50, height: 50))
-//        str.append(viewStr)
-
-        let imStr2 = NSMutableAttributedString.mk_image(im: UIImage.init(named: "face")!, size: CGSize.init(width: 50, height: 50), alignType: NSMutableAttributedString.AlignType.bottom)
-        str.append(imStr2)
+        let v = UISwitch.init()
+        let viewStr = NSMutableAttributedString.mk_view(view: v, superView: ml, size: v.bounds.size)
+        str.append(viewStr)
 
 
 

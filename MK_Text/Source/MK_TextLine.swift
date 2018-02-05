@@ -19,12 +19,14 @@ struct MK_TextLine{
     var lineStartCenterPoint:CGPoint
     
     var lineHeight:CGFloat
+
+    var centerOff:CGFloat
     
     func drawInContext(context:CGContext,size:CGSize){
         var startX = lineStartCenterPoint.x
         for item in sentenceArr {
             let size = item.size
-            item.drawInContext(context: context, startCenterPoint: CGPoint.init(x: startX, y: lineStartCenterPoint.y))
+            item.drawInContext(context: context, startCenterPoint: CGPoint.init(x: startX, y: lineStartCenterPoint.y - centerOff))
             startX += size.width
         }
     }

@@ -36,12 +36,12 @@ class MK_TextLayout:NSObject{
 extension MK_TextLayout {
     
     func getTapString(point:CGPoint)->MK_TapStringAttr?{
-
+        
         guard let arr = lineArray else { return nil }
         guard let line = getLineAt(point: point, arr: arr) else { return nil }
         
         guard let str = line.getAttrbuteStrAt(point: point) else { return nil }
-
+        
         guard let res = str.getTapStringAttr() else { return nil }
         
         return res
@@ -104,16 +104,16 @@ extension MK_TextLayout {
             
             let y = maxHight - currentYR - (currentCenterToTop + currentCenterToBottom)*0.5
             
-            let line = MK_TextLine.init(sentenceArr: sentenceArr, lineStartCenterPoint: CGPoint.init(x: 0, y: y), lineHeight: (currentCenterToTop + currentCenterToBottom))
+            let line = MK_TextLine.init(sentenceArr: sentenceArr, lineStartCenterPoint: CGPoint.init(x: 0, y: y), lineHeight: (currentCenterToTop + currentCenterToBottom), centerOff: (currentCenterToTop - currentCenterToBottom)*0.5)
             
             return isCancel(line,currentCenterToBottom + currentCenterToTop)
         }
         
         ///当宽度越界
         func whenWidthIsOutofBorder()->Bool{
-
+            
             if cW + currentXR >= maxWidth {
-
+                
                 let isCancelRes = getCanelResultAndOutLine()
                 ///换行处理
                 if !isCancelRes {
@@ -128,23 +128,19 @@ extension MK_TextLayout {
             return false
         }
         
-
+        
         //MARK:- 遍历富文本
         for i in 0..<str.length{
-
+            
             currentRange.location = i
             let cha = str.attributedSubstring(from: currentRange)
-
+            
             //是否为附件类型
             if let acc = cha.getAccessory() {
                 ctt = acc.CenterToTop
                 ctb = acc.CenterToBottom
                 cW = acc.acc_Size.MK_Accessory_Width
-
-                print(ctt)
-                print(ctb)
-                print("===")
-
+                
                 ///越界判断
                 guard !whenWidthIsOutofBorder() else { return }
                 
@@ -186,7 +182,7 @@ extension MK_TextLayout {
                     }
                     sentence = MK_Text_SenTence_String.init(string: NSMutableAttributedString.init(attributedString: cha), strSize: size)
                 }
-
+                
             }
         }
         _ = getCanelResultAndOutLine()
