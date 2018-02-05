@@ -28,8 +28,11 @@ public class MK_Label:MK_AsyncView{
         self.draw(self.bounds)
     }
 
+    ///布局
+    let layout = MK_TextLayout()
+    ///点击
+    lazy var tapManager = MK_TapManager()
 
-    fileprivate let layout = MK_TextLayout()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -56,21 +59,17 @@ public class MK_Label:MK_AsyncView{
             for item in arr{
                 item.drawInContext(context:context, size: self!.frame.size)
             }
-
         }
         return task
     }()
 
-    ///获取点击
-    fileprivate func clickLabel(point:CGPoint){
-        guard let str = text else { return }
-        guard let tap = layout.getTapString(point: point) else { return }
-        let range = tap.getRangeIn(attStr: str)
-        let s = text?.attributedSubstring(from: range!)
-        print(range)
-        print(s?.string)
-
-        tap.clickBlock(tap.str)
+    ///按下~~
+    fileprivate func tapDownAt(point:CGPoint){
+        tapManager.tapDownAt(point: point, view: self)
+    }
+    ///抬起
+    fileprivate func tapUpAt(point:CGPoint){
+        tapManager.tapUpAt(point: point, view: self)
     }
 }
 
@@ -79,7 +78,12 @@ public class MK_Label:MK_AsyncView{
     extension MK_Label {
         public override func mouseDown(with event: NSEvent) {
             let location = self.convert(event.locationInWindow, to: nil)
-            clickLabel(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y))
+            tapDownAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y))
+        }
+
+        public override func mouseUp(with event: NSEvent) {
+            let location = self.convert(event.locationInWindow, to: nil)
+            tapUpAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y))
         }
     }
 
@@ -87,7 +91,7 @@ public class MK_Label:MK_AsyncView{
     extension MK_Label {
         public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
             guard let location = touches.first?.location(in: self) else { return }
-            clickLabel(point: location)
+            tapDownAt(point: location)
         }
     }
 

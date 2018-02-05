@@ -22,23 +22,30 @@ class ViewController: NSViewController {
         //        let clickPoint = CGPoint.init(x: point.x, y: (str.mk_size.height)*0.5)
         //        let starIndex = CTLineGetStringIndexForPosition(line, clickPoint)
         //        print(starIndex)
-        
+
+
+
         let ml = MK_Label()
         ml.frame = CGRect.init(x: 0, y: 0, width: 100, height: 100)
         var str = NSMutableAttributedString.init(string: "a")
         str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 20), range: NSRange.init(location: 0, length: str.length))
         
         //let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.top)
-        
-        
-        
-        //str.append(imStr)
-        str.append(NSAttributedString.init(string: "123"))
-        str = str.mk_tap { (str) in
-            
-        }
 
-        str.append(NSAttributedString.init(string: "456"))
+        //str.append(imStr)
+
+
+        str.append(NSAttributedString.init(string: "123"))
+
+        let tap = NSMutableAttributedString.init(string: "bb")
+        let response = MK_TapResponse.init(highlitedBlock: { (str) -> [NSAttributedStringKey : Any]? in
+            return [NSAttributedStringKey.foregroundColor : NSColor.red]
+        }) { (str, range) in
+
+        }
+        tap.addTapAttr(response: response, range: nil)
+
+        str.append(tap)
 
         ml.text = str
         self.view.addSubview(ml)

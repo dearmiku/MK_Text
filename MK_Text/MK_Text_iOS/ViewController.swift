@@ -27,6 +27,10 @@ class ViewController: UIViewController {
         //str.append(imStr)
         str.append(NSAttributedString.init(string: "123"))
 
+
+        
+
+
         ml.text = str
         self.view.addSubview(ml)
     }

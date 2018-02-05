@@ -14,21 +14,24 @@
 
 public typealias MK_TapString_Block = (_ str:NSAttributedString)->()
 
+
+public struct MK_TapResponse {
+
+    public var highlitedBlock : ((_ str:NSAttributedString)->[NSAttributedStringKey : Any]?)
+
+    public var clickBlock : ((_ str:NSAttributedString , _ range:NSRange)->())?
+
+}
+
+
 ///可点击富文本
 class MK_TapStringAttr : NSObject {
 
     static let AttributeKey = "MK_TapStringAttr_Key"
 
-    var clickBlock:MK_TapString_Block!
-
-    var str:NSAttributedString!
+    var response:MK_TapResponse!
 
     var id:Int = Int(NSDate.init().timeIntervalSince1970)
-
-    init(tapBlock:@escaping MK_TapString_Block) {
-        super.init()
-        clickBlock = tapBlock
-    }
 
     ///获取在指定富文本中的Range
     func getRangeIn(attStr:NSAttributedString)->NSRange?{
@@ -55,17 +58,19 @@ class MK_TapStringAttr : NSObject {
 
 }
 
-public extension NSAttributedString {
-    ///请注意循环引用~
-    public func mk_tap(clickBlock:@escaping MK_TapString_Block)->NSMutableAttributedString{
-        let res = NSMutableAttributedString.init(attributedString: self)
-        let tap = MK_TapStringAttr.init(tapBlock: clickBlock)
-        tap.str = self
-        res.addAttribute(NSAttributedStringKey.init(MK_TapStringAttr.AttributeKey), value: tap, range: self.range)
-            return res
+
+public extension NSMutableAttributedString {
+
+    ///向富文本添加剪辑属性~ range为nil 则对整个富文本添加
+    func addTapAttr(response:MK_TapResponse, range:NSRange?){
+        let addRange = range != nil ? range! : self.range
+        let att = MK_TapStringAttr()
+        att.response = response
+        self.addAttributes([NSAttributedStringKey.init(MK_TapStringAttr.AttributeKey) : att], range: addRange)
     }
 
 }
+
 
 extension NSAttributedString {
 

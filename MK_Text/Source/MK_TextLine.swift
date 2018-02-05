@@ -42,8 +42,7 @@ extension MK_TextLine {
                 let line = unsafeBitCast(CFArrayGetValueAtIndex(CTFrameGetLines(frame), 0), to: CTLine.self)
                 let clickPoint = CGPoint.init(x: point.x - wi, y: (str.mk_size.height)*0.5)
                 let starIndex = CTLineGetStringIndexForPosition(line, clickPoint)
-
-                guard starIndex + 1 > (str.string as NSString).length else { return nil }
+                guard starIndex + 1 >= (str.string as NSString).length else { return nil }
                 let res = str.attributedSubstring(from: NSRange.init(location: starIndex, length: 1))
 
                 return res
