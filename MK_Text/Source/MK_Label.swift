@@ -16,23 +16,31 @@ import CoreGraphics
 
 
 public class MK_Label:MK_AsyncView{
-
+    
     ///富文本
     public var text:NSMutableAttributedString? {
         didSet{
-            self.draw(self.bounds)
+            if self.window != nil {
+                self.draw(self.bounds)
+            }
         }
     }
 
-    public func reDraw(){
-        self.draw(self.bounds)
-    }
+    ///和UILabel一样 指定行数~
+    public var numberOfLine:Int = 0
+
 
     ///布局
     let layout = MK_TextLayout()
     ///点击
     lazy var tapManager = MK_TapManager()
 
+
+
+    ///重制
+    public func reDraw(){
+        self.draw(self.bounds)
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,64 +50,73 @@ public class MK_Label:MK_AsyncView{
         super.init(coder: aDecoder)
         setUpLabel()
     }
-
+    
     fileprivate func setUpLabel(){
         self.setNewTask(task: labelTask)
     }
-
+    
     ///绘制任务
     fileprivate lazy var labelTask = { () -> MK_AsyncTask in
         var task = MK_AsyncTask()
-        task.disPlayBlock = {[weak self] (context,size)->() in
 
+        task.disPlayBlock = {[weak self] (context,size)->() in
+            
             guard self != nil else { return }
             guard let str = self?.text else { return }
-
-            let arr = self!.layout.layout(str: str, drawSize: self!.frame.size)
+            let size = self!.getLabelSize()
+            
+            let arr = self!.layout.layout(str: str, drawSize: size)
             for item in arr{
-                item.drawInContext(context:context, size: self!.frame.size)
+                item.drawInContext(context:context, size: size)
             }
         }
         return task
     }()
 
-    ///按下~~
-    fileprivate func tapDownAt(point:CGPoint){
-        tapManager.tapDownAt(point: point, view: self)
+
+    fileprivate func getLabelSize()->CGSize{
+        if !isAsync {
+            return self.bounds.size
+        }
+        var size:CGSize = CGSize.zero
+        let sema = DispatchSemaphore.init(value: 1)
+        OperationQueue.main.addOperation {
+            size = self.bounds.size
+            sema.signal()
+        }
+        sema.wait()
+        return size
     }
-    ///抬起
-    fileprivate func tapUpAt(point:CGPoint){
-        tapManager.tapUpAt(point: point, view: self)
-    }
+
 }
 
 #if os(macOS)
-
+    
     extension MK_Label {
         public override func mouseDown(with event: NSEvent) {
             let location = self.convert(event.locationInWindow, to: nil)
-            tapDownAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y))
+            tapManager.tapDownAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y),view: self)
         }
-
+        
         public override func mouseUp(with event: NSEvent) {
             let location = self.convert(event.locationInWindow, to: nil)
-            tapUpAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y))
+            tapManager.tapUpAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y),view: self)
         }
     }
-
+    
 #else
     extension MK_Label {
         public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
             
             guard let location = touches.first?.location(in: self) else { return }
-            tapDownAt(point: location)
+            tapManager.tapDownAt(point: location,view: self)
         }
         public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
             
             guard let location = touches.first?.location(in: self) else { return }
-            tapUpAt(point: location)
+            tapManager.tapUpAt(point: location,view: self)
         }
     }
-
+    
 #endif
 

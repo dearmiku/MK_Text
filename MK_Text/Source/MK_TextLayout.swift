@@ -29,6 +29,8 @@ extension NSAttributedString{
 class MK_TextLayout:NSObject{
     
     var lineArray:[MK_TextLine]?
+
+    var numberOfLine:Int = 0
     
 }
 

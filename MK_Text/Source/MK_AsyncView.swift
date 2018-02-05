@@ -61,8 +61,8 @@ public class MK_AsyncView: MK_View {
         }
     }
 
-
-    var isAsync:Bool = false
+    ///是否异步绘制~
+    public var isAsync:Bool = false
 
     fileprivate var drawTask:MK_AsyncTask?
 
