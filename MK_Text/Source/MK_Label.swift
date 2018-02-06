@@ -16,10 +16,16 @@ import CoreGraphics
 
 
 public class MK_Label:MK_AsyncView{
-    
+
+
+    static let AttributeKey = "MK_Label_AttributeKey"
     ///富文本
     public var text:NSMutableAttributedString? {
         didSet{
+            if text != nil{
+                weak var weakSelf = self
+                text?.addAttributes([NSAttributedStringKey.init(MK_Label.AttributeKey) : weakSelf ?? 0], range: text!.range)
+            }
             if self.window != nil {
                 self.draw(self.bounds)
             }
@@ -30,15 +36,17 @@ public class MK_Label:MK_AsyncView{
     public var numberOfLine:Int = 0
 
 
+
+
+
     ///布局
     let layout = MK_TextLayout()
     ///点击
     lazy var tapManager = MK_TapManager()
 
-
-
     ///重制
     public func reDraw(){
+        guard self.window != nil else { return }
         self.draw(self.bounds)
     }
 
@@ -94,12 +102,12 @@ public class MK_Label:MK_AsyncView{
     
     extension MK_Label {
         public override func mouseDown(with event: NSEvent) {
-            let location = self.convert(event.locationInWindow, to: nil)
+            let location = self.convert(event.locationInWindow, from: self.window?.contentView)
             tapManager.tapDownAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y),view: self)
         }
         
         public override func mouseUp(with event: NSEvent) {
-            let location = self.convert(event.locationInWindow, to: nil)
+            let location = self.convert(event.locationInWindow, from: self.window?.contentView)
             tapManager.tapUpAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y),view: self)
         }
     }
@@ -107,12 +115,10 @@ public class MK_Label:MK_AsyncView{
 #else
     extension MK_Label {
         public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-            
             guard let location = touches.first?.location(in: self) else { return }
             tapManager.tapDownAt(point: location,view: self)
         }
         public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-            
             guard let location = touches.first?.location(in: self) else { return }
             tapManager.tapUpAt(point: location,view: self)
         }

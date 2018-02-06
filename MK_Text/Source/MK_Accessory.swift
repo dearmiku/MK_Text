@@ -85,9 +85,9 @@ class MK_Accessory:NSObject {
         case .center:
             acc_Size.MK_Accessory_Descent = 0.0
         case .bottom:
-            acc_Size.MK_Accessory_Descent = -acc_Size.MK_Accessory_Height * 0.25
+            acc_Size.MK_Accessory_Descent = -acc_Size.MK_Accessory_Height * 0.5
         case .top:
-            acc_Size.MK_Accessory_Descent = acc_Size.MK_Accessory_Height * 0.25
+            acc_Size.MK_Accessory_Descent = acc_Size.MK_Accessory_Height * 0.5
         case .custom(let (cus)):
             acc_Size.MK_Accessory_Descent = cus * CGFloat(0.5)
         }
@@ -96,6 +96,7 @@ class MK_Accessory:NSObject {
         res.addAttributes([NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr):self], range: NSRange.init(location: 0, length: res.length))
         return res
     }
+
 }
 
 extension MK_Accessory {

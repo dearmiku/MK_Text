@@ -36,7 +36,7 @@ public class MK_AsyncView: MK_View {
                         self.layer?.contents = im
                     })
                 #else
-                    UIGraphicsBeginImageContext(size)
+                    UIGraphicsBeginImageContextWithOptions(size, false, MK_Scale)
                     guard let context = UIGraphicsGetCurrentContext() else {return}
                     context.translateBy(x: 0, y: size.height)
                     context.scaleBy(x: 1.0, y: -1.0)

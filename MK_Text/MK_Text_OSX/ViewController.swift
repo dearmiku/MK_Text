@@ -16,13 +16,20 @@ class ViewController: NSViewController {
 
         let ml = MK_Label()
         //ml.isAsync = true
-        ml.frame = CGRect.init(x: 0, y: 0, width: 100, height: 100)
+        ml.frame = CGRect.init(x: 100, y: 100, width: 100, height: 100)
         let str = NSMutableAttributedString.init(string: "miku")
-        str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 20), range: NSRange.init(location: 0, length: str.length))
+        str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 30), range: NSRange.init(location: 0, length: str.length))
 
 
-        let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.top)
+        let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.center)
         str.append(imStr)
+
+
+        let v = NSButton.init()
+        v.frame = NSRect.init(x: 0, y: 0, width: 30, height: 30)
+        let viewStr = NSMutableAttributedString.mk_view(view: v, superView: ml, size: v.bounds.size ,alignType: NSMutableAttributedString.AlignType.center)
+        str.append(viewStr)
+
 
 
 
@@ -35,10 +42,14 @@ class ViewController: NSViewController {
         tap.addTapAttr(response: response, range: nil)
         str.append(tap)
 
-
+        
 
         ml.text = str
         self.view.addSubview(ml)
+
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+            //ml.text?.mk_setAttrtbute(dic: [NSAttributedStringKey.foregroundColor : NSColor.blue], range: ml.text!.range)
+        }
 
     }
 }

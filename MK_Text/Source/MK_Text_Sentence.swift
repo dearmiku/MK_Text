@@ -41,7 +41,6 @@ class MK_Text_SenTence_String : MK_Text_Sentence_Protocol {
         let drawRec = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: strSize)
         let frame = CTFramesetterCreateFrame(frameSetter, CFRange.init(location: 0, length: str.length), CGPath.init(rect: drawRec, transform: nil), nil)
         CTFrameDraw(frame, context)
-
     }
 }
 
@@ -62,14 +61,22 @@ class MK_Text_SenTence_Accessory : MK_Text_Sentence_Protocol {
     func drawInContext(context:CGContext,startCenterPoint:CGPoint){
 
         let accSize = acc.acc_Size
-        let y = startCenterPoint.y - accSize.MK_Accessory_Height*0.5 - accSize.MK_Accessory_Descent
-        let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: size)
 
         switch acc.content! {
         case .image(let(im, _ )):
+            let y = startCenterPoint.y - accSize.MK_Accessory_Height*0.5 - accSize.MK_Accessory_Descent
+            let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: size)
             context.draw(im.CGImage, in: rect)
 
         case .view(let(view, _ , superV)):
+
+            #if os(macOS)
+                let scale:CGFloat = 1.0
+            #else
+                let scale:CGFloat = 0.5
+            #endif
+            let y = startCenterPoint.y - accSize.MK_Accessory_Height*0.5 - accSize.MK_Accessory_Descent
+            let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y * scale), size: size)
             OperationQueue.main.addOperation {
                 view.frame = rect
                 superV.addSubview(view)

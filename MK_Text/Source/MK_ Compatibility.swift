@@ -13,12 +13,14 @@
     public typealias MK_View = NSView
     public typealias MK_Image = NSImage
     public typealias MK_TapGes = NSClickGestureRecognizer
+let MK_Scale = NSScreen.main != nil ? NSScreen.main!.backingScaleFactor : 1.0
 
 #else
     import UIKit
     public typealias MK_View = UIView
     public typealias MK_Image = UIImage
     public typealias MK_TapGes = UITapGestureRecognizer
+let MK_Scale = UIScreen.main.scale
 
 #endif
 
