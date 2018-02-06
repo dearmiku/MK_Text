@@ -1,4 +1,5 @@
 # MK_Text
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/dearmiku/MK_Text/master/LICENSE) [![Support](https://img.shields.io/badge/support-iOS%208%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/) [![Support](https://img.shields.io/badge/support-OSX%2010.10%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/macos) [![CocoaPods](https://img.shields.io/cocoapods/p/MK_Text.svg?style=flat)]()
 
 # 简介
 **MK_Text**是方便开发者使用富文本的纯Swift框架,目标向YYText看齐,功能会在后续逐渐丰富,目前实现了Label的基本功能~ (๑•ᴗ•๑)
