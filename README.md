@@ -45,6 +45,15 @@
         tap.addTapAttr(response: response, range: nil)
 ```
 
+## 效果
+目前只实现了上述的功能,其他功能会在后续丰富~
+
+![iOS效果图](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/iOS%E6%95%88%E6%9E%9C%E5%9B%BE.gif)
+
+
+![OSX效果图](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/OSX%E6%95%88%E6%9E%9C%E5%9B%BE.gif)
+
+
 ## 异步渲染
 通过设置 Label的**isAsync**属性来确定~ 默认为false
 

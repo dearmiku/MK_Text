@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary          = '帮助开发者处理富文本的Swift框架'
  
   s.description      = <<-DESC
-    帮助开发者处理富文本的Swift框架,具体内容后续补充
+    帮助开发者处理富文本的Swift框架,具体内容后续补充 详情看主页~(๑•ᴗ•๑)
                        DESC
  
 
