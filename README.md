@@ -61,11 +61,14 @@
 
 ## 使用注意
 ### 中途修改富文本属性
-若需要在修改富文本属性的同事刷新UI界面,请使用下面这个方法
+若需要在修改富文本属性的同时刷新UI界面,请使用下面这个方法
 
 ```
 public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange)->Void
 ```
+
+### 自动布局
+本框架是在View的`func draw(_ rect: CGRect)`中触发绘制的,,只要在`draw`之前确定View的Rect即可~ 所以是支持类似**SnapKit**这样的布局框架的~, 现阶段无法根据内容撑起Label的Size,在后续我会去实现,达到UILabel的效果~
 
 ### 接口变动
 因现为测试版本,并不会考虑向下兼容~

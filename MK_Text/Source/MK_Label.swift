@@ -32,10 +32,6 @@ public class MK_Label:MK_AsyncView{
         }
     }
 
-    ///和UILabel一样 指定行数~
-    public var numberOfLine:Int = 0
-
-
 
 
 
