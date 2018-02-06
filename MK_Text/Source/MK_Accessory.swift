@@ -30,13 +30,29 @@ public extension NSMutableAttributedString {
         case custom(CGFloat)
     }
 
-    ///获取图像富文本
+
+    /// 设置图像富文本
+    ///
+    /// - Parameters:
+    ///   - im: Image
+    ///   - size: 像是Image大小,默认显示image原始大小
+    ///   - alignType: 与字行中线对齐方式
+    /// - Returns: 图像富文本
     static func mk_image(im:MK_Image,size:CGSize = CGSize.zero,alignType:AlignType = .center)->NSMutableAttributedString{
         let conSize = size == CGSize.zero ? im.size : size
         let acc = MK_Accessory.init(con: ContentType.image(im, conSize), ali: alignType)
         return acc.turnToAttrStr()
     }
-    ///控件富文本
+
+
+    /// 设置控件富文本
+    ///
+    /// - Parameters:
+    ///   - view: 放置的View
+    ///   - superView: 传入其所在Label
+    ///   - size: View大小
+    ///   - alignType: 与字行中线对齐方式
+    /// - Returns: 控件富文本
     static func mk_view(view:MK_View,superView:MK_View,size:CGSize,alignType:AlignType = .center)->NSMutableAttributedString{
         let acc = MK_Accessory.init(con: NSMutableAttributedString.ContentType.view(view,size,superView), ali: alignType)
         return acc.turnToAttrStr()

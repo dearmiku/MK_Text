@@ -14,13 +14,23 @@
 
 public typealias MK_TapString_Block = (_ str:NSAttributedString)->()
 
-
+///高亮属性响应
 public struct MK_TapResponse {
 
     public var highlitedBlock : ((_ str:NSAttributedString)->[NSAttributedStringKey : Any]?)
 
     public var clickBlock : ((_ str:NSAttributedString , _ range:NSRange)->())?
 
+
+    /// 属性初始化
+    ///
+    /// - Parameters:
+    ///   - highlite: 高亮时回调闭包 返回高亮时属性
+    ///   - click: 点击有效完成时回调闭包
+    public init(highlite:@escaping (_ str:NSAttributedString)->[NSAttributedStringKey : Any]?,click:@escaping (_ str:NSAttributedString , _ range:NSRange)->()) {
+        self.highlitedBlock = highlite
+        self.clickBlock = click
+    }
 }
 
 
@@ -60,7 +70,12 @@ class MK_TapStringAttr : NSObject {
 
 public extension NSMutableAttributedString {
 
-    ///向富文本添加剪辑属性~ range为nil 则对整个富文本添加
+
+    /// 向富文本中添加高亮属性~
+    ///
+    /// - Parameters:
+    ///   - response: 响应信息
+    ///   - range: 作用范围
     func addTapAttr(response:MK_TapResponse, range:NSRange?){
         let addRange = range != nil ? range! : self.range
         let att = MK_TapStringAttr()

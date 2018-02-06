@@ -34,7 +34,7 @@ class ViewController: NSViewController {
 
 
         let tap = NSMutableAttributedString.init(string: "可点击字符")
-        let response = MK_TapResponse.init(highlitedBlock: { (str) -> [NSAttributedStringKey : Any]? in
+        let response = MK_TapResponse.init(highlite: { (str) -> [NSAttributedStringKey : Any]? in
             return [NSAttributedStringKey.foregroundColor : NSColor.red]
         }) { (str, range) in
             print("点击字符串~")

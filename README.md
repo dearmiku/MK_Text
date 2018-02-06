@@ -67,6 +67,8 @@
 public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange)->Void
 ```
 
+### 接口变动
+因现为测试版本,并不会考虑向下兼容~
 
 # 安装
 ## CocoaPods
