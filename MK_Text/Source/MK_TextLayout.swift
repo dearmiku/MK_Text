@@ -22,7 +22,47 @@ extension NSAttributedString{
             return CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, CFRange.init(location: 0, length: 0), nil, CGSize(width: INTPTR_MAX, height: INTPTR_MAX), nil)
         #endif
     }
-    
+}
+
+public extension MK_Label {
+
+    ///字行数
+    public var numberOfLines:Int {
+        get{
+            return self.layout.numberOfLine
+        }
+        set{
+            self.layout.numberOfLine = newValue
+        }
+    }
+
+    ///最大宽度
+    public var layoutMaxWidth:CGFloat {
+        get{
+            return self.layout.layoutMaxWidth
+        }
+        set{
+            self.layout.layoutMaxWidth = newValue
+        }
+    }
+
+    ///最大高度
+    public var layoutMaxHight:CGFloat {
+        get{
+            return self.layout.layoutMaxHight
+        }
+        set{
+            self.layout.layoutMaxHight = newValue
+        }
+    }
+
+}
+
+
+
+protocol MK_TextLayout_Delegate {
+
+    func getLayoutDrawSize(newSize:CGSize)
 }
 
 ///富文本管理对象~
@@ -30,38 +70,21 @@ class MK_TextLayout:NSObject{
     
     var lineArray:[MK_TextLine]?
 
+    var delegate:MK_TextLayout_Delegate!
+
     var numberOfLine:Int = 0
-    
+
+
+    var layoutMaxWidth:CGFloat = -1.0
+    var layoutMaxHight:CGFloat = -1.0
+    var isAutoLayoutSize : Bool {
+        get{
+            return layoutMaxWidth != -1.0 || layoutMaxHight != -1.0
+        }
+    }
+
 }
 
-///点击相关~
-extension MK_TextLayout {
-    
-    func getTapString(point:CGPoint)->MK_TapStringAttr?{
-        
-        guard let arr = lineArray else { return nil }
-        guard let line = getLineAt(point: point, arr: arr) else { return nil }
-        
-        guard let str = line.getAttrbuteStrAt(point: point) else { return nil }
-        
-        guard let res = str.getTapStringAttr() else { return nil }
-        
-        return res
-    }
-    
-    fileprivate func getLineAt(point:CGPoint,arr:[MK_TextLine])->MK_TextLine?{
-        guard arr.count != 0 else { return nil }
-        var hi = CGFloat(0)
-        for line in arr {
-            hi += line.lineHeight
-            if hi >= point.y{
-                return line
-            }
-        }
-        return nil
-    }
-    
-}
 
 ///生成布局
 extension MK_TextLayout {
@@ -69,18 +92,36 @@ extension MK_TextLayout {
         
         var currentBottomLineY = CGFloat(0)
         var lineArr:[MK_TextLine] = []
-        
-        getMK_LineAndJudgeIsCancel(str: str, maxWidth: drawSize.width,maxHight:drawSize.height) { (line, lineHeight) -> (Bool) in
+        let size = getLayoutSize(size: drawSize)
+
+        var width = CGFloat(0.0)
+        var hight = CGFloat(0.0)
+
+        getMK_LineAndJudgeIsCancel(str: str, maxWidth: size.width,maxHight:size.height) { (line, lineHeight,lineWidth) -> (Bool) in
+
             lineArr.append(line)
             currentBottomLineY += lineHeight
-            return currentBottomLineY >= drawSize.height
+
+            width = lineWidth
+            hight += lineHeight
+
+            return currentBottomLineY >= size.height || (self.numberOfLine > 0 && self.numberOfLine <= lineArr.count)
         }
+
+        ///启动自填充时修改Line绘制位置~
+        if isAutoLayoutSize {
+            for line in lineArr {
+                line.lineStartCenterPoint.y += (hight - size.height)
+            }
+            delegate.getLayoutDrawSize(newSize: CGSize.init(width: width, height: hight))
+        }
+
         self.lineArray = lineArr
         return lineArr
     }
     
     ///获得line 并判断是否继续
-    func getMK_LineAndJudgeIsCancel(str:NSMutableAttributedString,maxWidth:CGFloat,maxHight:CGFloat,isCancel:@escaping (MK_TextLine,CGFloat)->(Bool)){
+    func getMK_LineAndJudgeIsCancel(str:NSMutableAttributedString,maxWidth:CGFloat,maxHight:CGFloat,isCancel:@escaping (MK_TextLine,CGFloat,CGFloat)->(Bool)){
         guard str.length != 0 else { return }
         
         var currentXR = CGFloat(0)
@@ -93,22 +134,23 @@ extension MK_TextLayout {
         var ctt = CGFloat(0)
         var ctb = CGFloat(0)
         var cW = CGFloat(0)
+
         
         var sentence:MK_Text_Sentence_Protocol? = nil
         var sentenceArr:[MK_Text_Sentence_Protocol] = []
         
         
         ///向外输出Line 并判断是否继续解析~
-        func getCanelResultAndOutLine()->Bool{
+        func getCanelResultAndOutLine(lineWidth:CGFloat)->Bool{
             if let beforeSec = sentence {
                 sentenceArr.append(beforeSec)
             }
             
             let y = maxHight - currentYR - (currentCenterToTop + currentCenterToBottom)*0.5
             
-            let line = MK_TextLine.init(sentenceArr: sentenceArr, lineStartCenterPoint: CGPoint.init(x: 0, y: y), lineHeight: (currentCenterToTop + currentCenterToBottom), centerOff: (currentCenterToTop - currentCenterToBottom)*0.5)
+            let line = MK_TextLine.init(sentArr: sentenceArr, startCenterPoint: CGPoint.init(x: 0, y: y), lineHeight: (currentCenterToTop + currentCenterToBottom), centerOff: (currentCenterToTop - currentCenterToBottom)*0.5)
             
-            return isCancel(line,currentCenterToBottom + currentCenterToTop)
+            return isCancel(line,currentCenterToBottom + currentCenterToTop, lineWidth)
         }
         
         ///当宽度越界
@@ -116,7 +158,7 @@ extension MK_TextLayout {
             
             if cW + currentXR >= maxWidth {
                 
-                let isCancelRes = getCanelResultAndOutLine()
+                let isCancelRes = getCanelResultAndOutLine(lineWidth: currentXR)
                 ///换行处理
                 if !isCancelRes {
                     
@@ -184,9 +226,18 @@ extension MK_TextLayout {
                     }
                     sentence = MK_Text_SenTence_String.init(string: NSMutableAttributedString.init(attributedString: cha), strSize: size)
                 }
-                
             }
         }
-        _ = getCanelResultAndOutLine()
+        _ = getCanelResultAndOutLine(lineWidth: currentXR)
+    }
+
+    ///获取绘制Size大小~
+    func getLayoutSize(size:CGSize)->CGSize{
+        if isAutoLayoutSize {
+            let w = layoutMaxWidth != -1.0 ? layoutMaxWidth : 10000.0
+            let h = layoutMaxHight != -1.0 ? layoutMaxHight : 10000.0
+            return CGSize.init(width: w, height: h)
+        }
+        return size
     }
 }

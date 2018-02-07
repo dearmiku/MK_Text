@@ -36,7 +36,11 @@ public class MK_Label:MK_AsyncView{
 
 
     ///布局
-    let layout = MK_TextLayout()
+    lazy var layout = { () -> MK_TextLayout in
+        let res = MK_TextLayout()
+        res.delegate = self
+        return res
+    }()
     ///点击
     lazy var tapManager = MK_TapManager()
 
@@ -122,3 +126,11 @@ public class MK_Label:MK_AsyncView{
     
 #endif
 
+extension MK_Label : MK_TextLayout_Delegate {
+
+    func getLayoutDrawSize(newSize: CGSize) {
+        print(newSize)
+        self.frame.size = newSize
+    }
+
+}

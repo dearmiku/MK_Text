@@ -12,7 +12,7 @@ import CoreText
 
 
 ///绘制字行~
-struct MK_TextLine{
+class MK_TextLine{
     
     var sentenceArr:[MK_Text_Sentence_Protocol]
     
@@ -21,7 +21,15 @@ struct MK_TextLine{
     var lineHeight:CGFloat
 
     var centerOff:CGFloat
-    
+
+    init(sentArr:[MK_Text_Sentence_Protocol],startCenterPoint:CGPoint,lineHeight:CGFloat,centerOff:CGFloat) {
+        self.sentenceArr =  sentArr
+        self.lineStartCenterPoint = startCenterPoint
+        self.lineHeight = lineHeight
+        self.centerOff = centerOff
+    }
+
+
     func drawInContext(context:CGContext,size:CGSize){
         var startX = lineStartCenterPoint.x
         for item in sentenceArr {

@@ -102,3 +102,32 @@ extension NSAttributedString {
 }
 
 
+///点击相关~
+extension MK_TextLayout {
+
+    func getTapString(point:CGPoint)->MK_TapStringAttr?{
+
+        guard let arr = lineArray else { return nil }
+        guard let line = getLineAt(point: point, arr: arr) else { return nil }
+
+        guard let str = line.getAttrbuteStrAt(point: point) else { return nil }
+
+        guard let res = str.getTapStringAttr() else { return nil }
+
+        return res
+    }
+
+    fileprivate func getLineAt(point:CGPoint,arr:[MK_TextLine])->MK_TextLine?{
+        guard arr.count != 0 else { return nil }
+        var hi = CGFloat(0)
+        for line in arr {
+            hi += line.lineHeight
+            if hi >= point.y{
+                return line
+            }
+        }
+        return nil
+    }
+
+}
+
