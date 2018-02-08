@@ -69,8 +69,6 @@ public extension MK_Label {
 
 }
 
-
-
 protocol MK_TextLayout_Delegate {
 
     func getLayoutDrawSize(newSize:CGSize)
@@ -78,7 +76,7 @@ protocol MK_TextLayout_Delegate {
 
 ///富文本管理对象~
 class MK_TextLayout:NSObject{
-    
+
     var lineArray:[MK_TextLine]?
 
     var delegate:MK_TextLayout_Delegate!
@@ -97,7 +95,7 @@ class MK_TextLayout:NSObject{
 
 ///生成布局
 extension MK_TextLayout {
-    func layout(str:NSMutableAttributedString,drawSize:CGSize)->[MK_TextLine]{
+    func layout(str:NSMutableAttributedString,drawSize:CGSize)->([MK_TextLine],CGSize){
         
         var currentBottomLineY = CGFloat(0)
         var lineArr:[MK_TextLine] = []
@@ -107,11 +105,11 @@ extension MK_TextLayout {
         var hight = CGFloat(0.0)
 
         getMK_LineAndJudgeIsCancel(str: str, maxWidth: size.width,maxHight:size.height) { (line, lineHeight,lineWidth) -> (Bool) in
-
             currentBottomLineY += lineHeight
 
-            width = lineWidth
+            if lineWidth > width { width = lineWidth }
             hight += lineHeight
+
             if currentBottomLineY <= size.height{
                 lineArr.append(line)
             }
@@ -119,20 +117,23 @@ extension MK_TextLayout {
             return currentBottomLineY >= size.height || (self.numberOfLine > 0 && self.numberOfLine <= lineArr.count)
         }
 
+        let newSize = CGSize.init(width: width, height: hight)
+        
         ///启动自填充时修改Line绘制位置~
         if isAutoLayoutSize {
             for line in lineArr {
                 line.lineStartCenterPoint.y += (hight - size.height)
             }
-            delegate.getLayoutDrawSize(newSize: CGSize.init(width: width, height: hight))
+            delegate.getLayoutDrawSize(newSize: newSize)
         }
 
         self.lineArray = lineArr
-        return lineArr
+        return (lineArr,newSize)
     }
     
     ///获得line 并判断是否继续
     func getMK_LineAndJudgeIsCancel(str:NSMutableAttributedString,maxWidth:CGFloat,maxHight:CGFloat,isCancel:@escaping (MK_TextLine,CGFloat,CGFloat)->(Bool)){
+
         guard str.length != 0 else { return }
         
         var currentXR = CGFloat(0)
@@ -146,7 +147,7 @@ extension MK_TextLayout {
         var ctb = CGFloat(0)
         var cW = CGFloat(0)
 
-        
+
         var sentence:MK_Text_Sentence_Protocol? = nil
         var sentenceArr:[MK_Text_Sentence_Protocol] = []
         
@@ -167,8 +168,7 @@ extension MK_TextLayout {
         ///当宽度越界
         func whenWidthIsOutofBorder()->Bool{
             
-            if cW + currentXR >= maxWidth {
-                
+            if Int(cW + currentXR) > Int(maxWidth) {
                 let isCancelRes = getCanelResultAndOutLine(lineWidth: currentXR)
                 ///换行处理
                 if !isCancelRes {
@@ -244,9 +244,20 @@ extension MK_TextLayout {
 
     ///获取绘制Size大小~
     func getLayoutSize(size:CGSize)->CGSize{
+
         if isAutoLayoutSize {
-            let w = layoutMaxWidth != -1.0 ? layoutMaxWidth : 10000.0
-            let h = layoutMaxHight != -1.0 ? layoutMaxHight : 10000.0
+            var w = CGFloat(0)
+            if size.width == 1 {
+                w = 10000.0
+            }else{
+                w = layoutMaxWidth != -1.0 ? layoutMaxWidth : size.width
+            }
+            var h = CGFloat(0)
+            if size.height == 1 {
+                h = 10000.0
+            }else{
+                h = layoutMaxHight != -1.0 ? layoutMaxHight : size.height
+            }
             return CGSize.init(width: w, height: h)
         }
         return size

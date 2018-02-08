@@ -20,35 +20,24 @@ public class MK_AsyncView: MK_View {
         guard let task = self.drawTask else {
             return
         }
-        let size = self.bounds.size
         let op = BlockOperation.init(block: {
             if task.willDisplayBlock != nil{
                 task.willDisplayBlock!(self)
             }
             if task.disPlayBlock != nil {
-                #if os(macOS)
-                    let colorSpace:CGColorSpace = CGColorSpaceCreateDeviceRGB()
-                    let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-                    guard let context = CGContext(data: nil, width: Int(size.width), height: Int(size.height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue) else {return}
-                    task.disPlayBlock!(context,size)
-                    let im = context.makeImage()
-                    OperationQueue.main.addOperation({
+
+                let time = NSDate.init()
+                let im = task.disPlayBlock!()
+
+                OperationQueue.main.addOperation({
+                    #if os(macOS)
+
                         self.layer?.contents = im
-                    })
-                #else
-                    UIGraphicsBeginImageContextWithOptions(size, false, MK_Scale)
-                    guard let context = UIGraphicsGetCurrentContext() else {return}
-                    context.translateBy(x: 0, y: size.height)
-                    context.scaleBy(x: 1.0, y: -1.0)
-
-                    task.disPlayBlock!(context,size)
-
-                    let im = UIGraphicsGetImageFromCurrentImageContext()
-                    OperationQueue.main.addOperation{
-                        self.layer.contents = im?.cgImage
-                    }
-                    UIGraphicsEndImageContext()
-                #endif
+                    #else
+                        self.layer.contents = im
+                    #endif
+                    print("MK\(time.timeIntervalSinceNow)")
+                })
             }
             if task.didDisplaBlocky != nil{
                 task.didDisplaBlocky!(self)
@@ -60,6 +49,8 @@ public class MK_AsyncView: MK_View {
             OperationQueue.main.addOperation(op)
         }
     }
+
+
 
     ///是否异步绘制~
     public var isAsync:Bool = false

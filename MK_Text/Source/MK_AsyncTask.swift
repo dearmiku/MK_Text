@@ -13,7 +13,7 @@ struct MK_AsyncTask{
 
     var willDisplayBlock:((_ layer:MK_AsyncView)->())?
 
-    var disPlayBlock:((_ context:CGContext,_ size:CGSize)->())?
+    var disPlayBlock:(()->CGImage?)?
 
     var didDisplaBlocky:((_ layer:MK_AsyncView)->())?
 
