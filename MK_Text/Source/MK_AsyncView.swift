@@ -31,7 +31,6 @@ public class MK_AsyncView: MK_View {
 
                 OperationQueue.main.addOperation({
                     #if os(macOS)
-
                         self.layer?.contents = im
                     #else
                         self.layer.contents = im

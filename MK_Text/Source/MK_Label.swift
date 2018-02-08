@@ -33,8 +33,6 @@ public class MK_Label:MK_AsyncView{
     }
     
     
-    
-    
     ///布局
     lazy var layout = { () -> MK_TextLayout in
         let res = MK_TextLayout()
@@ -61,9 +59,9 @@ public class MK_Label:MK_AsyncView{
     
     fileprivate func setUpLabel(){
         self.setNewTask(task: labelTask)
-        
     }
     
+    private var needSize:CGSize!
     ///绘制任务
     fileprivate lazy var labelTask = { () -> MK_AsyncTask in
         var task = MK_AsyncTask()
@@ -75,13 +73,39 @@ public class MK_Label:MK_AsyncView{
             let size = self!.getLabelSize()
             let (arr,newSize) = self!.layout.layout(str: str, drawSize: size)
             
-            let colorSpace:CGColorSpace = CGColorSpaceCreateDeviceRGB()
-            let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-            guard let context = CGContext(data: nil, width: Int(newSize.width), height: Int(newSize.height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue) else {return nil }
-            for item in arr{
-                item.drawInContext(context:context, size: newSize)
+            print(newSize)
+            
+            var context:CGContext?
+            let block = { ()->CGContext? in
+                
+                let colorSpace:CGColorSpace = CGColorSpaceCreateDeviceRGB()
+                let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+                let res = CGContext(data: nil, width: Int(newSize.width), height: Int(newSize.height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
+                return res
             }
-            let im = context.makeImage()
+            
+            if self!.isAsync {
+                #if os(macOS)
+                    let sema = DispatchSemaphore.init(value: 0)
+                    OperationQueue.main.addOperation({
+                        context = block()
+                        sema.signal()
+                    })
+                    _ = sema.wait(timeout: DispatchTime.now()+10)
+                #else
+                    context = block()
+                #endif
+                
+            }else {
+                context = block()
+            }
+            if context == nil { return nil }
+            
+            for item in arr{
+                item.drawInContext(context:context!, size: newSize)
+            }
+            let im = context!.makeImage()
+            
             return im
         }
         return task
@@ -93,12 +117,13 @@ public class MK_Label:MK_AsyncView{
             return self.bounds.size
         }
         var size:CGSize = CGSize.zero
-        let sema = DispatchSemaphore.init(value: 1)
+        let sema = DispatchSemaphore.init(value: 0)
         OperationQueue.main.addOperation {
             size = self.bounds.size
             sema.signal()
         }
-        sema.wait()
+        _ = sema.wait(timeout: DispatchTime.now()+10)
+        
         return size
     }
     
@@ -116,14 +141,16 @@ public class MK_Label:MK_AsyncView{
             let location = self.convert(event.locationInWindow, from: self.window?.contentView)
             tapManager.tapUpAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y),view: self)
         }
-        public override func viewDidMoveToSuperview() {
-            super.viewDidMoveToSuperview()
-            if isAutoLayoutSize {
-                self.translatesAutoresizingMaskIntoConstraints = false
-                let wi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 1.0)
-                
-                let hi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 1.0)
-                self.addConstraints([wi,hi])
+        
+        public override func viewDidMoveToWindow() {
+            
+            if self.translatesAutoresizingMaskIntoConstraints == false {
+                self.superview?.layoutSubtreeIfNeeded()
+                if self.frame.size == CGSize.zero {
+                    let wi = NSLayoutConstraint.init(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
+                    let hi = NSLayoutConstraint.init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
+                    self.addConstraints([wi,hi])
+                }
             }
         }
     }
@@ -138,16 +165,19 @@ public class MK_Label:MK_AsyncView{
             guard let location = touches.first?.location(in: self) else { return }
             tapManager.tapUpAt(point: location,view: self)
         }
-        public override func didMoveToSuperview() {
-            super.didMoveToSuperview()
-            if isAutoLayoutSize {
-                self.translatesAutoresizingMaskIntoConstraints = false
-                let wi = NSLayoutConstraint.init(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
-
-                let hi = NSLayoutConstraint.init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
-                self.addConstraints([wi,hi])
+        public override func didMoveToWindow() {
+            
+            if self.translatesAutoresizingMaskIntoConstraints == false {
+                self.superview?.layoutIfNeeded()
+                if self.frame.size == CGSize.zero {
+                    let wi = NSLayoutConstraint.init(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
+                    let hi = NSLayoutConstraint.init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
+                    self.addConstraints([wi,hi])
+                }
             }
+            
         }
+        
     }
 #endif
 
@@ -155,18 +185,24 @@ extension MK_Label : MK_TextLayout_Delegate {
     
     ///进行自动约束Size
     func getLayoutDrawSize(newSize: CGSize) {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        
-        for item in self.constraints {
-            if let conOb = item.firstItem as? NSObject ,conOb == self ,(item.firstAttribute == .width || item.firstAttribute == .height){
-                self.removeConstraint(item)
+        let block = {
+            self.translatesAutoresizingMaskIntoConstraints = false
+            
+            for item in self.constraints {
+                if let conOb = item.firstItem as? NSObject ,conOb == self ,(item.firstAttribute == .width || item.firstAttribute == .height){
+                    self.removeConstraint(item)
+                }
             }
+            let wi = NSLayoutConstraint.init(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: newSize.width)
+            
+            let hi = NSLayoutConstraint.init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: newSize.height)
+            self.addConstraints([wi,hi])
         }
-        let wi = NSLayoutConstraint.init(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: newSize.width)
-        
-        let hi = NSLayoutConstraint.init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: newSize.height)
-        self.addConstraints([wi,hi])
-
+        if Thread.current.isMainThread {
+            block()
+        }else{
+            OperationQueue.main.addOperation(block)
+        }
     }
     
 }

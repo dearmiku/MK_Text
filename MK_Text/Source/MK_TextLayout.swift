@@ -56,16 +56,11 @@ public extension MK_Label {
         }
     }
 
-    ///是否根据内容自动约束大小
-    public var isAutoLayoutSize:Bool {
-        get{
-            return self.layout.isAutoLayoutSize
-        }
-        set{
-            self.layout.isAutoLayoutSize = newValue
+    override var translatesAutoresizingMaskIntoConstraints:Bool {
+        didSet{
+            self.layout.isAutoLayoutSize = !translatesAutoresizingMaskIntoConstraints
         }
     }
-    
 
 }
 
@@ -118,7 +113,6 @@ extension MK_TextLayout {
         }
 
         let newSize = CGSize.init(width: width, height: hight)
-        
         ///启动自填充时修改Line绘制位置~
         if isAutoLayoutSize {
             for line in lineArr {
@@ -260,6 +254,7 @@ extension MK_TextLayout {
             }
             return CGSize.init(width: w, height: h)
         }
+
         return size
     }
 }

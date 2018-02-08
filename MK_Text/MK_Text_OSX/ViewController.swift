@@ -16,13 +16,13 @@ class ViewController: NSViewController {
         
 
         let ml = MK_Label()
-        //ml.isAsync = true
+        ml.isAsync = true
 
         let str = NSMutableAttributedString.init(string: "1234567890")
         str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 36), range: NSRange.init(location: 0, length: str.length))
 
         ml.text = str
-        ml.isAutoLayoutSize = true
+
         self.view.addSubview(ml)
 
         ml.snp.makeConstraints { (make) in
