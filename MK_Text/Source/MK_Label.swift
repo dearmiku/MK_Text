@@ -16,8 +16,8 @@ import CoreGraphics
 
 
 public class MK_Label:MK_AsyncView{
-
-
+    
+    
     static let AttributeKey = "MK_Label_AttributeKey"
     ///富文本
     public var text:NSMutableAttributedString? {
@@ -31,10 +31,10 @@ public class MK_Label:MK_AsyncView{
             }
         }
     }
-
-
-
-
+    
+    
+    
+    
     ///布局
     lazy var layout = { () -> MK_TextLayout in
         let res = MK_TextLayout()
@@ -43,13 +43,13 @@ public class MK_Label:MK_AsyncView{
     }()
     ///点击
     lazy var tapManager = MK_TapManager()
-
+    
     ///重制
     public func reDraw(){
         guard self.window != nil else { return }
         self.draw(self.bounds)
     }
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpLabel()
@@ -61,12 +61,13 @@ public class MK_Label:MK_AsyncView{
     
     fileprivate func setUpLabel(){
         self.setNewTask(task: labelTask)
+
     }
     
     ///绘制任务
     fileprivate lazy var labelTask = { () -> MK_AsyncTask in
         var task = MK_AsyncTask()
-
+        
         task.disPlayBlock = {[weak self] (context,size)->() in
             
             guard self != nil else { return }
@@ -80,8 +81,8 @@ public class MK_Label:MK_AsyncView{
         }
         return task
     }()
-
-
+    
+    
     fileprivate func getLabelSize()->CGSize{
         if !isAsync {
             return self.bounds.size
@@ -95,7 +96,7 @@ public class MK_Label:MK_AsyncView{
         sema.wait()
         return size
     }
-
+    
 }
 
 #if os(macOS)
@@ -109,6 +110,14 @@ public class MK_Label:MK_AsyncView{
         public override func mouseUp(with event: NSEvent) {
             let location = self.convert(event.locationInWindow, from: self.window?.contentView)
             tapManager.tapUpAt(point: CGPoint.init(x: location.x, y: self.bounds.size.height - location.y),view: self)
+        }
+        public override func viewDidMoveToSuperview() {
+            super.viewDidMoveToSuperview()
+            self.translatesAutoresizingMaskIntoConstraints = false
+//            let wi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.0, constant: 1.0)
+//
+//            let hi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.0, constant: 1.0)
+//            self.addConstraints([wi,hi])
         }
     }
     
@@ -127,10 +136,15 @@ public class MK_Label:MK_AsyncView{
 #endif
 
 extension MK_Label : MK_TextLayout_Delegate {
-
+    
     func getLayoutDrawSize(newSize: CGSize) {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        let wi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.0, constant: newSize.width)
+        
+        let hi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.0, constant: newSize.height)
         print(newSize)
-        self.frame.size = newSize
+        self.addConstraints([wi,hi])
+        
     }
-
+    
 }

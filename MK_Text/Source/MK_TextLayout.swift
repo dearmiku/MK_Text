@@ -56,6 +56,17 @@ public extension MK_Label {
         }
     }
 
+    ///是否根据内容自动约束大小
+    public var isAutoLayoutSize:Bool {
+        get{
+            return self.layout.isAutoLayoutSize
+        }
+        set{
+            self.layout.isAutoLayoutSize = newValue
+        }
+    }
+    
+
 }
 
 
@@ -77,11 +88,9 @@ class MK_TextLayout:NSObject{
 
     var layoutMaxWidth:CGFloat = -1.0
     var layoutMaxHight:CGFloat = -1.0
-    var isAutoLayoutSize : Bool {
-        get{
-            return layoutMaxWidth != -1.0 || layoutMaxHight != -1.0
-        }
-    }
+
+    ///是否自动扩充大小(自动布局)
+    var isAutoLayoutSize : Bool  = false
 
 }
 
@@ -99,11 +108,13 @@ extension MK_TextLayout {
 
         getMK_LineAndJudgeIsCancel(str: str, maxWidth: size.width,maxHight:size.height) { (line, lineHeight,lineWidth) -> (Bool) in
 
-            lineArr.append(line)
             currentBottomLineY += lineHeight
 
             width = lineWidth
             hight += lineHeight
+            if currentBottomLineY <= size.height{
+                lineArr.append(line)
+            }
 
             return currentBottomLineY >= size.height || (self.numberOfLine > 0 && self.numberOfLine <= lineArr.count)
         }

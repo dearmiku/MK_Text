@@ -19,7 +19,7 @@ class ViewController: NSViewController {
         //ml.isAsync = true
         ml.frame = CGRect.init(x: 100, y: 100, width: 100, height: 100)
         let str = NSMutableAttributedString.init(string: "1234567890")
-            str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 36), range: NSRange.init(location: 0, length: str.length))
+        str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 36), range: NSRange.init(location: 0, length: str.length))
 
         //
         //        let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.center)
@@ -46,14 +46,23 @@ class ViewController: NSViewController {
         //        ml.numberOfLines = 1
 
         ml.text = str
-        ml.layoutMaxWidth = 50.0
+        //ml.isAutoLayoutSize = true
         //ml.layoutMaxHight = 100.0
         
         self.view.addSubview(ml)
-        
-//        ml.snp.makeConstraints { (make) in
-//            make.center.equalToSuperview()
-//        }
+
+
+//        let wi = NSLayoutConstraint.init(item: ml, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 100)
+//
+//        let hi = NSLayoutConstraint.init(item: ml, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 100)
+//        let x = NSLayoutConstraint.init(item: ml, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1.0, constant: 100.0)
+//        let y = NSLayoutConstraint.init(item: ml, attribute: NSLayoutConstraint.Attribute.left, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.left, multiplier: 1.0, constant: 100.0)
+//
+//        ml.addConstraints([wi,hi,x,y])
+
+        //        ml.snp.makeConstraints { (make) in
+        //            make.center.equalToSuperview()
+        //        }
 
         
 
