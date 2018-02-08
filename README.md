@@ -71,10 +71,23 @@ public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange)->
 ```
 
 ### 自动布局
-本框架是在View的`func draw(_ rect: CGRect)`中触发绘制的,,只要在`draw`之前确定View的Rect即可~ 所以是支持类似**SnapKit**这样的布局框架的~, 现阶段无法根据内容撑起Label的Size,在后续我会去实现,达到UILabel的效果~
+本框架是在View的`func draw(_ rect: CGRect)`中触发绘制的,,只要在`draw`之前确定View的Rect即可~ 
 
-### 接口变动
-因现为测试版本,并不会考虑向下兼容~
+若希望通过根据富文本内容自适应宽高约束,需要使用下面的属性
+
+```
+/// 限制填充的最大宽度,当到达时会自动换行
+public var layoutMaxWidth:CGFloat 
+
+/// 限制填充的最大高度,当到达时将不再绘制
+public var layoutMaxHight:CGFloat
+
+/// 是否进行内容填充,默认为false
+public var isAutoLayoutSize:Bool
+
+```
+
+原理为当获得富文本绘制大小时,向**MK_Label**添加/更新宽高约束~ 
 
 # 安装
 ## CocoaPods
