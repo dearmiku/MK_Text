@@ -113,11 +113,13 @@ public class MK_Label:MK_AsyncView{
         }
         public override func viewDidMoveToSuperview() {
             super.viewDidMoveToSuperview()
+            if isAutoLayoutSize {
             self.translatesAutoresizingMaskIntoConstraints = false
-//            let wi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.0, constant: 1.0)
-//
-//            let hi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.0, constant: 1.0)
-//            self.addConstraints([wi,hi])
+            let wi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 1.0)
+
+            let hi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 1.0)
+            self.addConstraints([wi,hi])
+            }
         }
     }
     
@@ -136,13 +138,20 @@ public class MK_Label:MK_AsyncView{
 #endif
 
 extension MK_Label : MK_TextLayout_Delegate {
-    
+
+    ///进行自动约束Size
     func getLayoutDrawSize(newSize: CGSize) {
         self.translatesAutoresizingMaskIntoConstraints = false
-        let wi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.0, constant: newSize.width)
+
+        for item in self.constraints {
+            if let conOb = item.firstItem as? NSObject ,conOb == self ,(item.firstAttribute == .width || item.firstAttribute == .height){
+                self.removeConstraint(item)
+            }
+        }
+
+        let wi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: newSize.width)
         
-        let hi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.0, constant: newSize.height)
-        print(newSize)
+        let hi = NSLayoutConstraint.init(item: self, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: newSize.height)
         self.addConstraints([wi,hi])
         
     }
