@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreGraphics
 
 #if os(macOS)
     import AppKit
@@ -65,5 +66,22 @@ public extension NSMutableAttributedString {
         label.reDraw()
     }
 
+}
+
+extension MK_View {
+
+    func getBoundsThreadSafe()->CGSize{
+        if Thread.current.isMainThread {
+            return self.bounds.size
+        }
+        var size:CGSize = CGSize.zero
+        let sema = DispatchSemaphore.init(value: 0)
+        OperationQueue.main.addOperation {
+            size = self.bounds.size
+            sema.signal()
+        }
+        _ = sema.wait(timeout: DispatchTime.now()+10)
+        return size
+    }
 }
 

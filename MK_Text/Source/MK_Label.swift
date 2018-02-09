@@ -73,8 +73,6 @@ public class MK_Label:MK_AsyncView{
             let size = self!.getLabelSize()
             let (arr,newSize) = self!.layout.layout(str: str, drawSize: size)
             
-            print(newSize)
-            
             var context:CGContext?
             let block = { ()->CGContext? in
                 

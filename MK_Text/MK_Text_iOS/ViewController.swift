@@ -17,13 +17,14 @@ class ViewController: UIViewController {
         
 
                 let ml = MK_Label()
+        ml.isAsync = true
                 ml.frame = CGRect.init(x: 100, y: 300, width: 100, height: 100)
                 let str = NSMutableAttributedString.init(string: "miku")
                 str.addAttribute(NSAttributedStringKey.font, value: UIFont.systemFont(ofSize: 20), range: NSRange.init(location: 0, length: str.length))
 
 
                 let imStr = NSMutableAttributedString.mk_image(im: UIImage.init(named: "face")!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.top)
-               // str.append(imStr)
+                str.append(imStr)
 
 
 

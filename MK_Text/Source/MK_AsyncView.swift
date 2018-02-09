@@ -26,16 +26,13 @@ public class MK_AsyncView: MK_View {
             }
             if task.disPlayBlock != nil {
 
-                let time = NSDate.init()
                 let im = task.disPlayBlock!()
-
                 OperationQueue.main.addOperation({
                     #if os(macOS)
                         self.layer?.contents = im
                     #else
                         self.layer.contents = im
                     #endif
-                    print("MK\(time.timeIntervalSinceNow)")
                 })
             }
             if task.didDisplaBlocky != nil{

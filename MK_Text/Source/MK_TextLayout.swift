@@ -113,6 +113,7 @@ extension MK_TextLayout {
         }
 
         let newSize = CGSize.init(width: width, height: hight)
+
         ///启动自填充时修改Line绘制位置~
         if isAutoLayoutSize {
             for line in lineArr {
@@ -122,7 +123,11 @@ extension MK_TextLayout {
         }
 
         self.lineArray = lineArr
-        return (lineArr,newSize)
+        if isAutoLayoutSize{
+            return (lineArr,newSize)
+        }else{
+            return (lineArr,size)
+        }
     }
     
     ///获得line 并判断是否继续
