@@ -61,13 +61,12 @@ class MK_Text_SenTence_Accessory : MK_Text_Sentence_Protocol {
     func drawInContext(context:CGContext,startCenterPoint:CGPoint){
 
         let accSize = acc.acc_Size
-        print(startCenterPoint)
         switch acc.content! {
         case .image(let(im, _ )):
             let y = startCenterPoint.y - accSize.MK_Accessory_Height*0.5 - accSize.MK_Accessory_Descent
             let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: size)
             context.draw(im.CGImage, in: rect)
-            print("\(rect)im")
+
         case .view(let(view, _ , superV)):
 
             #if os(macOS)

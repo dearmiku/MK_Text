@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'MK_Text'
-  s.version          = '0.1.0'
+  s.version          = '0.2.0'
   s.summary          = '帮助开发者处理富文本的Swift框架'
  
   s.description      = <<-DESC
