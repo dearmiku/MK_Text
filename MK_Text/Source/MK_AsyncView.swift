@@ -24,7 +24,6 @@ public class MK_AsyncView: MK_View {
             if task.willDisplayBlock != nil{
                 task.willDisplayBlock!(self)
             }
-            let time = Date()
             if task.disPlayBlock != nil {
 
                 let im = task.disPlayBlock!()
@@ -34,7 +33,6 @@ public class MK_AsyncView: MK_View {
                     #else
                         self.layer.contents = im
                     #endif
-                    print("MK--\(time.timeIntervalSinceNow)")
                 })
             }
             if task.didDisplaBlocky != nil{

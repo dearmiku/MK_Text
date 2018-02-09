@@ -12,6 +12,8 @@
 > 支持高亮文字设置
 > 
 > 支持OSX 与 iOS
+> 
+> 支持自动布局
 
 # 用法
 ## 图文混排
@@ -71,9 +73,12 @@ public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange)->
 ```
 
 ### 自动布局
-本框架是在View的`func draw(_ rect: CGRect)`中触发绘制的,,只要在`draw`之前确定View的Rect即可~ 
 
-若希望通过根据富文本内容自适应宽高约束,需要使用下面的属性
+**MK_Text**对于自动约束的支持是参照**UILabel**来做的, 当View的**translatesAutoresizingMaskIntoConstraints**为true时, 则按照View的frame进行渲染. 
+
+若为false,则会判断约束是否约束到宽高, 若约束到 则按约束的宽高进行渲染,若未约束到,则会根据渲染内容来补充宽高约束~
+
+**MK_Text**也提供了限制补充的最大高度和宽度~
 
 ```
 /// 限制填充的最大宽度,当到达时会自动换行
@@ -82,12 +87,10 @@ public var layoutMaxWidth:CGFloat
 /// 限制填充的最大高度,当到达时将不再绘制
 public var layoutMaxHight:CGFloat
 
-/// 是否进行内容填充,默认为false
-public var isAutoLayoutSize:Bool
 
 ```
 
-原理为当获得富文本绘制大小时,向**MK_Label**添加/更新宽高约束~ 
+
 
 # 安装
 ## CocoaPods
