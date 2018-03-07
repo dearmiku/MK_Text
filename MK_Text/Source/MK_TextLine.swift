@@ -15,12 +15,14 @@ import CoreText
 class MK_TextLine{
     
     var sentenceArr:[MK_Text_Sentence_Protocol]
-    
+    ///绘制起始中心点(CenterY)
     var lineStartCenterPoint:CGPoint
-    
+    ///绘制行高
     var lineHeight:CGFloat
-
+    ///绘制中心点偏差(CenterY_Off)
     var centerOff:CGFloat
+    ///绘制X偏差
+    var xOff:CGFloat = CGFloat(0)
 
     init(sentArr:[MK_Text_Sentence_Protocol],startCenterPoint:CGPoint,lineHeight:CGFloat,centerOff:CGFloat) {
         self.sentenceArr =  sentArr
@@ -31,7 +33,7 @@ class MK_TextLine{
 
 
     func drawInContext(context:CGContext,size:CGSize){
-        var startX = lineStartCenterPoint.x
+        var startX = lineStartCenterPoint.x + xOff
         for item in sentenceArr {
             let size = item.size
             item.drawInContext(context: context, startCenterPoint: CGPoint.init(x: startX, y: lineStartCenterPoint.y - centerOff))

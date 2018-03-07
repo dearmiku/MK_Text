@@ -16,6 +16,7 @@ class ViewController: NSViewController {
         
 
         let ml = MK_Label()
+        ml.alignment = .center
         ml.isAsync = true
 
         let str = NSMutableAttributedString.init(string: "1234567890")
@@ -28,19 +29,19 @@ class ViewController: NSViewController {
 
         let v = NSView()
         v.wantsLayer = true
-        v.layer?.backgroundColor = CGColor.black
+        v.layer?.backgroundColor = CGColor.init(red: 1, green: 0, blue: 0, alpha: 1)
         let vStr = NSMutableAttributedString.mk_view(view: v, superView: ml, size: CGSize.init(width: 30, height: 30))
         str.append(vStr)
 
         ml.text = str
 
         self.view.addSubview(ml)
-        ml.frame = CGRect.init(x: 100, y: 100, width: 100, height: 100)
 
 
-//        ml.snp.makeConstraints { (make) in
-//            make.center.equalToSuperview()
-//        }
+        ml.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
+            make.width.equalTo(100)
+        }
 
 
     }

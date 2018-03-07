@@ -51,6 +51,10 @@
         tap.addTapAttr(response: response, range: nil)
 ```
 
+## 对齐方式
+通过**MK_Label**的 alignment属性 进行设置(默认为左对齐)
+
+
 ## 效果
 目前只实现了上述的功能,其他功能会在后续丰富~
 
@@ -77,18 +81,6 @@ public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange)->
 **MK_Text**对于自动约束的支持是参照**UILabel**来做的, 当View的**translatesAutoresizingMaskIntoConstraints**为true时, 则按照View的frame进行渲染. 
 
 若为false,则会判断约束是否约束到宽高, 若约束到 则按约束的宽高进行渲染,若未约束到,则会根据渲染内容来补充宽高约束~
-
-**MK_Text**也提供了限制补充的最大高度和宽度~(当约束中限制了高度/宽度则不需要设置下列属性)
-
-```
-/// 限制填充的最大宽度,当到达时会自动换行
-public var layoutMaxWidth:CGFloat 
-
-/// 限制填充的最大高度,当到达时将不再绘制
-public var layoutMaxHight:CGFloat
-
-
-```
 
 
 

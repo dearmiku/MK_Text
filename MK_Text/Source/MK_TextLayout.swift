@@ -35,30 +35,30 @@ public extension MK_Label {
             self.layout.numberOfLine = newValue
         }
     }
-
-    ///最大宽度
-    public var layoutMaxWidth:CGFloat {
-        get{
-            return self.layout.layoutMaxWidth
-        }
-        set{
-            self.layout.layoutMaxWidth = newValue
-        }
-    }
-
-    ///最大高度
-    public var layoutMaxHight:CGFloat {
-        get{
-            return self.layout.layoutMaxHight
-        }
-        set{
-            self.layout.layoutMaxHight = newValue
-        }
-    }
-
+    ///是否为自动约束
     override var translatesAutoresizingMaskIntoConstraints:Bool {
         didSet{
             self.layout.isAutoLayoutSize = !translatesAutoresizingMaskIntoConstraints
+        }
+    }
+
+    ///布局对齐方式
+    enum Alignment{
+        ///左对齐
+        case left
+        ///居中对齐
+        case center
+        ///右对齐
+        case right
+    }
+
+    ///文字对其方式(默认左对齐)
+    public var alignment:Alignment{
+        get{
+            return self.layout.alignment
+        }
+        set{
+            self.layout.alignment = newValue
         }
     }
 
@@ -78,9 +78,7 @@ class MK_TextLayout:NSObject{
 
     var numberOfLine:Int = 0
 
-
-    var layoutMaxWidth:CGFloat = -1.0
-    var layoutMaxHight:CGFloat = -1.0
+    var alignment:MK_Label.Alignment = .left
 
     ///是否自动扩充大小(自动布局)
     var isAutoLayoutSize : Bool  = false
@@ -99,13 +97,26 @@ extension MK_TextLayout {
         var width = CGFloat(0.0)
         var hight = CGFloat(0.0)
 
+        ///判断是否继续绘制Line 
         getMK_LineAndJudgeIsCancel(str: str, maxWidth: size.width,maxHight:size.height) { (line, lineHeight,lineWidth) -> (Bool) in
             currentBottomLineY += lineHeight
 
             if lineWidth > width { width = lineWidth }
             hight += lineHeight
 
+            ///增加新行
             if currentBottomLineY <= size.height{
+
+                ///根据对齐方式调整布局
+                switch self.alignment{
+
+                case .left:
+                    break
+                case .center:
+                    line.xOff = (size.width - lineWidth)*0.5
+                case .right:
+                    line.xOff = size.width - lineWidth
+                }
                 lineArr.append(line)
             }
 
@@ -247,15 +258,15 @@ extension MK_TextLayout {
         if isAutoLayoutSize {
             var w = CGFloat(0)
             if size.width == 1 {
-                w = layoutMaxWidth != -1.0 ? layoutMaxWidth : 10000.0
+                w = 10000.0
             }else{
-                w = layoutMaxWidth != -1.0 ? layoutMaxWidth : size.width
+                w = size.width
             }
             var h = CGFloat(0)
             if size.height == 1 {
-                h = layoutMaxWidth != -1.0 ? layoutMaxWidth : 10000.0
+                h =  10000.0
             }else{
-                h = layoutMaxHight != -1.0 ? layoutMaxHight : size.height
+                h = size.height
             }
             return CGSize.init(width: w, height: h)
         }
@@ -263,3 +274,4 @@ extension MK_TextLayout {
         return size
     }
 }
+
