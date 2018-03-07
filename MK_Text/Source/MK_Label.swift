@@ -144,10 +144,13 @@ public class MK_Label:MK_AsyncView{
             
             if self.translatesAutoresizingMaskIntoConstraints == false {
                 self.superview?.layoutSubtreeIfNeeded()
-                if self.frame.size == CGSize.zero {
+                if self.frame.size.width == 0 {
                     let wi = NSLayoutConstraint.init(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
+                    self.addConstraints([wi])
+                }
+                if self.frame.size.height == 0 {
                     let hi = NSLayoutConstraint.init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
-                    self.addConstraints([wi,hi])
+                    self.addConstraints([hi])
                 }
             }
         }
@@ -167,10 +170,13 @@ public class MK_Label:MK_AsyncView{
             
             if self.translatesAutoresizingMaskIntoConstraints == false {
                 self.superview?.layoutIfNeeded()
-                if self.frame.size == CGSize.zero {
+                if self.frame.size.width == 0 {
                     let wi = NSLayoutConstraint.init(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
+                    self.addConstraints([wi])
+                }
+                if self.frame.size.height == 0 {
                     let hi = NSLayoutConstraint.init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1.0)
-                    self.addConstraints([wi,hi])
+                    self.addConstraints([hi])
                 }
             }
             

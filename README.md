@@ -78,7 +78,7 @@ public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange)->
 
 若为false,则会判断约束是否约束到宽高, 若约束到 则按约束的宽高进行渲染,若未约束到,则会根据渲染内容来补充宽高约束~
 
-**MK_Text**也提供了限制补充的最大高度和宽度~
+**MK_Text**也提供了限制补充的最大高度和宽度~(当约束中限制了高度/宽度则不需要设置下列属性)
 
 ```
 /// 限制填充的最大宽度,当到达时会自动换行

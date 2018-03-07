@@ -247,13 +247,13 @@ extension MK_TextLayout {
         if isAutoLayoutSize {
             var w = CGFloat(0)
             if size.width == 1 {
-                w = 10000.0
+                w = layoutMaxWidth != -1.0 ? layoutMaxWidth : 10000.0
             }else{
                 w = layoutMaxWidth != -1.0 ? layoutMaxWidth : size.width
             }
             var h = CGFloat(0)
             if size.height == 1 {
-                h = 10000.0
+                h = layoutMaxWidth != -1.0 ? layoutMaxWidth : 10000.0
             }else{
                 h = layoutMaxHight != -1.0 ? layoutMaxHight : size.height
             }
