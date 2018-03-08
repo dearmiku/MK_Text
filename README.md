@@ -56,6 +56,8 @@
 
 ![居中对齐效果图](https://github.com/dearmiku/MK_Text/blob/master/Image/%E5%B1%85%E4%B8%AD%E5%AF%B9%E9%BD%90.png?raw=true)
 
+## 异步渲染
+通过设置 Label的**isAsync**属性来确定~ 默认为false
 
 ## 效果
 目前只实现了上述的功能,其他功能会在后续丰富~
@@ -66,19 +68,30 @@
 ![OSX效果图](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/OSX%E6%95%88%E6%9E%9C%E5%9B%BE.gif)
 
 
-## 异步渲染
-通过设置 Label的**isAsync**属性来确定~ 默认为false
+# 性能
+关于性能我只是简单的测试了一下,和**YY_Text**比较一下,下面是为绘制所用的时间的简单对比~
+![测试1](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/T1.png)
+![测试2](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/T2.png)
+![测试3](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/T3.png)
+
+这里是测试耗时的地方
+**MK_Text**
+![测试2](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/C1.png)
+**YY_Text**
+![测试3](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/C2.png)
+
+测下来的结果是**MK_Text**快一些,可能是我的功能相对简单和使用**Swift**的原因吧~ 总计不算慢~
 
 
-## 使用注意
-### 中途修改富文本属性
+# 使用注意
+## 中途修改富文本属性
 若需要在修改富文本属性的同时刷新UI界面,请使用下面这个方法
 
 ```
 public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange)->Void
 ```
 
-### 自动布局
+## 自动布局
 
 **MK_Text**对于自动约束的支持是参照**UILabel**来做的, 当View的**translatesAutoresizingMaskIntoConstraints**为true时, 则按照View的frame进行渲染. 
 
