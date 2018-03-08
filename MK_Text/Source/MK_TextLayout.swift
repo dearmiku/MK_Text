@@ -129,6 +129,7 @@ extension MK_TextLayout {
         if isAutoLayoutSize {
             for line in lineArr {
                 line.lineStartCenterPoint.y += (hight - size.height)
+                line.totalHeight = newSize.height
             }
             delegate.getLayoutDrawSize(newSize: newSize)
         }

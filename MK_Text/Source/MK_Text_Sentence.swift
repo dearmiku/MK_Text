@@ -9,6 +9,12 @@
 import Foundation
 import CoreGraphics
 import CoreText
+#if os(macOS)
+    import AppKit
+#else
+    import UIKit
+#endif
+
 
 ///绘制字句协议
 protocol MK_Text_Sentence_Protocol {
@@ -76,10 +82,10 @@ class MK_Text_SenTence_Accessory : MK_Text_Sentence_Protocol {
             #endif
 
             let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: size)
-
-            OperationQueue.main.addOperation {
-                view.frame = rect
+            print(rect)
+            DispatchQueue.main.async {
                 superV.addSubview(view)
+                view.frame = rect
             }
         }
     }

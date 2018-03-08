@@ -201,6 +201,7 @@ extension MK_Label : MK_TextLayout_Delegate {
             
             let hi = NSLayoutConstraint.init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: newSize.height)
             self.addConstraints([wi,hi])
+            self.frame.size = newSize
         }
         if Thread.current.isMainThread {
             block()
