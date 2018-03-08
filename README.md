@@ -72,7 +72,7 @@
 关于性能我只是简单的测试了一下,和**YY_Text**比较一下,下面是为绘制所用的时间的简单对比~
 ![测试1](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/T1.png)
 ![测试2](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/T2.png)
-![测试3](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/T3.png)
+
 
 这里是测试耗时的地方
 **MK_Text**
