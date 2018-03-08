@@ -55,6 +55,8 @@ class ViewController: UIViewController {
         }
         ml.text = str
 
+        print(NSAttributedString.init(string: " ").mk_size)
+
 //        let yyla = YYLabel()
 //        yyla.text = "hah"
 //

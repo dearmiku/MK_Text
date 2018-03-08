@@ -82,7 +82,6 @@ class MK_Text_SenTence_Accessory : MK_Text_Sentence_Protocol {
             #endif
 
             let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: size)
-            print(rect)
             DispatchQueue.main.async {
                 superV.addSubview(view)
                 view.frame = rect

@@ -18,8 +18,7 @@ extension NSAttributedString{
         #if os(macOS)
             return self.boundingRect(with: CGSize(width: INTPTR_MAX, height: INTPTR_MAX), options: NSString.DrawingOptions.usesLineFragmentOrigin).size
         #else
-            let frameSetter = CTFramesetterCreateWithAttributedString(self)
-            return CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, CFRange.init(location: 0, length: 0), nil, CGSize(width: INTPTR_MAX, height: INTPTR_MAX), nil)
+            return self.size()
         #endif
     }
 }
@@ -129,7 +128,6 @@ extension MK_TextLayout {
         if isAutoLayoutSize {
             for line in lineArr {
                 line.lineStartCenterPoint.y += (hight - size.height)
-                line.totalHeight = newSize.height
             }
             delegate.getLayoutDrawSize(newSize: newSize)
         }

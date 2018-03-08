@@ -43,7 +43,7 @@ class ViewController: NSViewController {
             make.width.equalTo(100)
         }
 
-
+     print(NSAttributedString.init(string: " ").mk_size)
     }
 }
 
