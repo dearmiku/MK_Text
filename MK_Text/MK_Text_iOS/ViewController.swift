@@ -56,21 +56,22 @@ class ViewController: UIViewController {
         //
         //        print(NSAttributedString.init(string: "Did not pass compliance testing，").size())
         //        print(NSAttributedString.init(string: "Did not pass compliance testing，").boundingRect(with: CGSize.init(width: 1000, height: 1000), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil))
-
-        let yyla = YYLabel()
-        yyla.attributedText = NSMutableAttributedString.init(string: "66666666666666666666666", attributes: nil)
-        self.view.addSubview(yyla)
+//
+//        let yyla = YYLabel()
+//        yyla.attributedText = NSMutableAttributedString.init(string: "66666666666666666666666", attributes: nil)
+//        self.view.addSubview(yyla)
 
         let mkLa = MK_Label()
-        mkLa.text = NSMutableAttributedString.init(string: "66666666666666666666666", attributes: nil)
+        mkLa.text = NSMutableAttributedString.init(string: "1234567890", attributes: [NSAttributedStringKey.font:UIFont.systemFont(ofSize: 10),.foregroundColor:UIColor.black])
         self.view.addSubview(mkLa)
-
-
-        yyla.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
-        }
+//
+//
+//        yyla.snp.makeConstraints { (make) in
+//            make.center.equalToSuperview()
+//        }
         mkLa.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
+            make.width.equalTo(100)
         }
 
 

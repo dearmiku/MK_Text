@@ -31,7 +31,7 @@ public class MK_Label:MK_AsyncView{
             }
         }
     }
-    
+
     
     ///布局
     lazy var layout = { () -> MK_TextLayout in
@@ -70,6 +70,7 @@ public class MK_Label:MK_AsyncView{
             
             guard self != nil else { return nil }
             guard let str = self?.text else { return nil }
+
             let size = self!.getLabelSize()
             let (arr,newSize) = self!.layout.layout(str: str, drawSize: size)
             
@@ -103,7 +104,7 @@ public class MK_Label:MK_AsyncView{
                 item.drawInContext(context:context!, size: newSize)
             }
             let im = context!.makeImage()
-            
+
             return im
         }
         return task
@@ -191,7 +192,11 @@ extension MK_Label : MK_TextLayout_Delegate {
     func getLayoutDrawSize(newSize: CGSize) {
         let block = {
             self.translatesAutoresizingMaskIntoConstraints = false
-            
+
+            guard abs(newSize.width - self.frame.size.width) > 1 || abs(newSize.height - self.frame.size.height) > 1 else {
+                return
+            }
+
             for item in self.constraints {
                 if let conOb = item.firstItem as? NSObject ,conOb == self ,(item.firstAttribute == .width || item.firstAttribute == .height){
                     self.removeConstraint(item)
@@ -203,6 +208,7 @@ extension MK_Label : MK_TextLayout_Delegate {
             self.addConstraints([wi,hi])
             self.frame.size = newSize
         }
+
         if Thread.current.isMainThread {
             block()
         }else{

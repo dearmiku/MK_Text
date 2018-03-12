@@ -42,8 +42,6 @@ class MK_TapManager {
         if tap1.id == tapNow.id {
             tapNow.response.clickBlock?(str1,range)
         }
-
-
     }
 
 }

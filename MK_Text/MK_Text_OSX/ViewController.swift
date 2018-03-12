@@ -16,24 +16,24 @@ class ViewController: NSViewController {
         
 
         let ml = MK_Label()
-        ml.alignment = .center
-        ml.isAsync = true
+       // ml.alignment = .center
+        //ml.isAsync = true
 
-        let str = NSMutableAttributedString.init(string: "1234567890")
-        str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 16), range: NSRange.init(location: 0, length: str.length))
+//        let str = NSMutableAttributedString.init(string: "1234567890")
+//        str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 16), range: NSRange.init(location: 0, length: str.length))
+//
+//        let im = NSImage.init(named: NSImage.Name.init("face"))
+//        let imStr = NSMutableAttributedString.mk_image(im: im!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.center)
+//        str.insert(imStr, at: 2)
+//
+//
+//        let v = NSView()
+//        v.wantsLayer = true
+//        v.layer?.backgroundColor = CGColor.init(red: 1, green: 0, blue: 0, alpha: 1)
+//        let vStr = NSMutableAttributedString.mk_view(view: v, superView: ml, size: CGSize.init(width: 30, height: 30))
+//        str.append(vStr)
 
-        let im = NSImage.init(named: NSImage.Name.init("face"))
-        let imStr = NSMutableAttributedString.mk_image(im: im!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.center)
-        str.insert(imStr, at: 2)
-
-
-        let v = NSView()
-        v.wantsLayer = true
-        v.layer?.backgroundColor = CGColor.init(red: 1, green: 0, blue: 0, alpha: 1)
-        let vStr = NSMutableAttributedString.mk_view(view: v, superView: ml, size: CGSize.init(width: 30, height: 30))
-        str.append(vStr)
-
-        ml.text = str
+        ml.text = NSMutableAttributedString.init(string: "00000，", attributes: [NSAttributedStringKey.font : NSFont.systemFont(ofSize: 30),NSAttributedStringKey.foregroundColor:NSColor.black])
 
         self.view.addSubview(ml)
 
@@ -43,7 +43,7 @@ class ViewController: NSViewController {
             make.width.equalTo(100)
         }
 
-     print(NSAttributedString.init(string: " ").mk_size)
+     print(NSAttributedString.init(string: "，").mk_size)
     }
 }
 

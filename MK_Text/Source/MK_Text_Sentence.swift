@@ -44,13 +44,13 @@ class MK_Text_SenTence_String : MK_Text_Sentence_Protocol {
         let frameSetter = CTFramesetterCreateWithAttributedString(str)
         let strSize = str.mk_size
         let y = startCenterPoint.y - strSize.height * 0.5
-        /// + 3 是为了处理 以中文符号结尾时 导致无法绘制的Bug 
-        let drawRec = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y - 1.5), size: CGSize.init(width: strSize.width + 3, height: strSize.height + 3))
+        /// 这里drawRect + 一定长度 是为了处理 以中文符号结尾时 由于drawSize比实际需要的Size小 导致绘制失败
+        let drawRec = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: CGSize.init(width: strSize.width + strSize.height * 0.2, height: strSize.height + strSize.height * 0.2))
         let patch = CGMutablePath.init()
         patch.addRect(drawRec)
         let frame = CTFramesetterCreateFrame(frameSetter, CFRange.init(location: 0, length: str.length), patch, nil)
         CTFrameDraw(frame, context)
-
+        print("\(drawRec)     \(str.string)  \(str.mk_size)")
     }
 }
 
