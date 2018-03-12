@@ -16,8 +16,8 @@ class ViewController: NSViewController {
         
 
         let ml = MK_Label()
-       // ml.alignment = .center
-        //ml.isAsync = true
+        ml.alignment = .center
+        ml.isAsync = true
 
 //        let str = NSMutableAttributedString.init(string: "1234567890")
 //        str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 16), range: NSRange.init(location: 0, length: str.length))
@@ -43,7 +43,7 @@ class ViewController: NSViewController {
             make.width.equalTo(100)
         }
 
-     print(NSAttributedString.init(string: "，").mk_size)
+    
     }
 }
 
