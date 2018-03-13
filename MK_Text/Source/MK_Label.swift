@@ -85,16 +85,27 @@ public class MK_Label:MK_AsyncView{
 
             let size = self!.getLabelSize()
             let (arr,newSize) = self!.layout.layout(str: str, drawSize: size)
-            
+
+
             var context:CGContext?
             let block = { ()->CGContext? in
-                
-                let colorSpace:CGColorSpace = CGColorSpaceCreateDeviceRGB()
-                let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-                let res = CGContext(data: nil, width: Int(newSize.width), height: Int(newSize.height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
-                return res
+                #if os(macOS)
+                    let colorSpace:CGColorSpace = CGColorSpaceCreateDeviceRGB()
+                    let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+                    let res = CGContext(data: nil, width: Int(newSize.width), height: Int(newSize.height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
+                    return res
+                #else
+
+                    UIGraphicsBeginImageContextWithOptions(newSize, false, MK_Scale)
+                    let res = UIGraphicsGetCurrentContext()
+                    res?.translateBy(x: 0, y: newSize.height)
+                    res?.scaleBy(x: 1.0, y: -1.0)
+                    return res
+
+                #endif
+
             }
-            
+
             if self!.isAsync {
                 #if os(macOS)
                     let sema = DispatchSemaphore.init(value: 0)
@@ -106,16 +117,22 @@ public class MK_Label:MK_AsyncView{
                 #else
                     context = block()
                 #endif
-                
+
             }else {
                 context = block()
             }
             if context == nil { return nil }
-            
+
             for item in arr{
                 item.drawInContext(context:context!, size: newSize)
             }
-            let im = context!.makeImage()
+
+            #if os(macOS)
+
+                let im = context!.makeImage()
+            #else
+                let im = UIGraphicsGetImageFromCurrentImageContext()?.cgImage
+            #endif
 
             return im
         }
