@@ -9,17 +9,25 @@
 import Foundation
 import CoreGraphics
 import CoreText
-
+#if os(macOS)
+    import AppKit
+#else
+    import UIKit
+#endif
 
 
 extension NSAttributedString{
     
     var mk_size:CGSize{
+        var res:CGSize
         #if os(macOS)
-            return self.boundingRect(with: CGSize(width: INTPTR_MAX, height: INTPTR_MAX), options: NSString.DrawingOptions.usesLineFragmentOrigin).size
+            res = self.boundingRect(with: CGSize(width: INTPTR_MAX, height: INTPTR_MAX), options: NSString.DrawingOptions.usesLineFragmentOrigin).size
         #else
-            return self.size()
+            res = self.boundingRect(with: CGSize(width: INTPTR_MAX, height: INTPTR_MAX), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil).size
         #endif
+        res.width *= 1.1
+        res.height *= 1.1
+        return res
     }
 }
 
@@ -65,7 +73,10 @@ public extension MK_Label {
 
 protocol MK_TextLayout_Delegate {
 
+    ///得到富文本绘制大小
     func getLayoutDrawSize(newSize:CGSize)
+    ///获取绘制字行的父视图
+    func getLinesSuperView()->MK_View
 }
 
 ///富文本管理对象~
@@ -167,10 +178,10 @@ extension MK_TextLayout {
                 sentenceArr.append(beforeSec)
             }
             
-            let y = maxHight - currentYR - (currentCenterToTop + currentCenterToBottom)*0.5
+            let y = maxHight - currentYR - (currentCenterToTop + currentCenterToBottom)*0.5 
             
             let line = MK_TextLine.init(sentArr: sentenceArr, startCenterPoint: CGPoint.init(x: 0, y: y), lineHeight: (currentCenterToTop + currentCenterToBottom), centerOff: (currentCenterToTop - currentCenterToBottom)*0.5)
-            
+
             return isCancel(line,currentCenterToBottom + currentCenterToTop, lineWidth)
         }
         
@@ -218,7 +229,8 @@ extension MK_TextLayout {
                     sentenceArr.append(beforeSec)
                     sentence = nil
                 }
-                sentence = MK_Text_SenTence_Accessory.init(accessory: acc, accSize: CGSize.init(width: acc.acc_Size.MK_Accessory_Width, height: acc.acc_Size.MK_Accessory_Height))
+                let view = self.delegate.getLinesSuperView()
+                sentence = MK_Text_SenTence_Accessory.init(accessory: acc, accSize: CGSize.init(width: acc.acc_Size.MK_Accessory_Width, height: acc.acc_Size.MK_Accessory_Height), superView: view)
                 
                 ///普通富文本串
             }else{
@@ -234,7 +246,7 @@ extension MK_TextLayout {
                 currentXR += cW
                 if ctt > currentCenterToTop { currentCenterToTop = ctt }
                 if ctb > currentCenterToBottom { currentCenterToBottom = ctb }
-                
+
                 if let beforeSec = sentence as? MK_Text_SenTence_String{
                     beforeSec.str.append(cha)
                     beforeSec.size.width += size.width

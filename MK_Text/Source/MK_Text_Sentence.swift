@@ -44,13 +44,11 @@ class MK_Text_SenTence_String : MK_Text_Sentence_Protocol {
         let frameSetter = CTFramesetterCreateWithAttributedString(str)
         let strSize = str.mk_size
         let y = startCenterPoint.y - strSize.height * 0.5
-        /// 这里drawRect + 一定长度 是为了处理 以中文符号结尾时 由于drawSize比实际需要的Size小 导致绘制失败
-        let drawRec = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: CGSize.init(width: strSize.width + strSize.height * 0.2, height: strSize.height + strSize.height * 0.2))
+        let drawRec = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: CGSize.init(width: strSize.width, height: strSize.height))
         let patch = CGMutablePath.init()
         patch.addRect(drawRec)
         let frame = CTFramesetterCreateFrame(frameSetter, CFRange.init(location: 0, length: str.length), patch, nil)
         CTFrameDraw(frame, context)
-        print("\(drawRec)     \(str.string)  \(str.mk_size)")
     }
 }
 
@@ -63,9 +61,12 @@ class MK_Text_SenTence_Accessory : MK_Text_Sentence_Protocol {
 
     var size:CGSize
 
-    init(accessory: MK_Accessory, accSize: CGSize){
+    weak var superV:MK_View?
+
+    init(accessory: MK_Accessory, accSize: CGSize,superView:MK_View){
         acc = accessory
         size = accSize
+        superV = superView
     }
 
     func drawInContext(context:CGContext,startCenterPoint:CGPoint){
@@ -77,16 +78,16 @@ class MK_Text_SenTence_Accessory : MK_Text_Sentence_Protocol {
             let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: size)
             context.draw(im.CGImage, in: rect)
 
-        case .view(let(view, _ , superV)):
-
+        case .view(let(view, _ )):
+            guard let superV = self.superV else { return }
             #if os(macOS)
                 let y = startCenterPoint.y - accSize.MK_Accessory_Height*0.5 - accSize.MK_Accessory_Descent
             #else
                 let y =  superV.getBoundsThreadSafe().height - startCenterPoint.y - accSize.MK_Accessory_Height*0.5 - accSize.MK_Accessory_Descent
             #endif
-
             let rect = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: size)
             DispatchQueue.main.async {
+
                 superV.addSubview(view)
                 view.frame = rect
             }

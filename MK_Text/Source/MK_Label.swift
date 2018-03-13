@@ -19,8 +19,20 @@ public class MK_Label:MK_AsyncView{
     
     
     static let AttributeKey = "MK_Label_AttributeKey"
+
     ///富文本
-    public var text:NSMutableAttributedString? {
+    public var attributeStr:NSAttributedString? {
+        didSet{
+            guard let str = attributeStr else {
+                text = nil
+                return
+            }
+            text = NSMutableAttributedString.init(attributedString: str)
+        }
+    }
+
+    ///富文本
+    var text:NSMutableAttributedString? {
         didSet{
             if text != nil{
                 weak var weakSelf = self
@@ -187,7 +199,11 @@ public class MK_Label:MK_AsyncView{
 #endif
 
 extension MK_Label : MK_TextLayout_Delegate {
-    
+
+    func getLinesSuperView() -> MK_View {
+        return self
+    }
+
     ///进行自动约束Size
     func getLayoutDrawSize(newSize: CGSize) {
         let block = {

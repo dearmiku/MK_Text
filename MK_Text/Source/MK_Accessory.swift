@@ -16,7 +16,7 @@ public extension NSMutableAttributedString {
 
         case image (MK_Image,CGSize)
 
-        case view (MK_View,CGSize,MK_View)
+        case view (MK_View,CGSize)
     }
 
     ///对齐方式
@@ -53,8 +53,8 @@ public extension NSMutableAttributedString {
     ///   - size: View大小
     ///   - alignType: 与字行中线对齐方式
     /// - Returns: 控件富文本
-    static func mk_view(view:MK_View,superView:MK_View,size:CGSize,alignType:AlignType = .center)->NSMutableAttributedString{
-        let acc = MK_Accessory.init(con: NSMutableAttributedString.ContentType.view(view,size,superView), ali: alignType)
+    static func mk_view(view:MK_View,size:CGSize,alignType:AlignType = .center)->NSMutableAttributedString{
+        let acc = MK_Accessory.init(con: NSMutableAttributedString.ContentType.view(view,size), ali: alignType)
         return acc.turnToAttrStr()
     }
     
@@ -93,7 +93,7 @@ class MK_Accessory:NSObject {
 
 
         switch content! {
-        case .image(let (_, size)),.view(let (_, size, _)):
+        case .image(let (_, size)),.view(let (_, size)):
             acc_Size.MK_Accessory_Width = size.width
             acc_Size.MK_Accessory_Height = size.height
         }
