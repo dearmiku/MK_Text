@@ -16,17 +16,17 @@ import CoreText
 #endif
 
 
-extension NSAttributedString{
-    
-    var mk_size:CGSize{
+
+
+public extension NSAttributedString{
+
+   public var mk_size:CGSize{
         var res:CGSize
         #if os(macOS)
             res = self.boundingRect(with: CGSize(width: INTPTR_MAX, height: INTPTR_MAX), options: NSString.DrawingOptions.usesLineFragmentOrigin).size
         #else
             res = self.boundingRect(with: CGSize(width: INTPTR_MAX, height: INTPTR_MAX), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil).size
         #endif
-        res.width *= 1.1
-        res.height *= 1.1
         return res
     }
 }

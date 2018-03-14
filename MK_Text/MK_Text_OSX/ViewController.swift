@@ -33,7 +33,7 @@ class ViewController: NSViewController {
 //        let vStr = NSMutableAttributedString.mk_view(view: v, superView: ml, size: CGSize.init(width: 30, height: 30))
 //        str.append(vStr)
 
-        ml.text = NSMutableAttributedString.init(string: "00000，", attributes: [NSAttributedStringKey.font : NSFont.systemFont(ofSize: 30),NSAttributedStringKey.foregroundColor:NSColor.black])
+        ml.text = NSMutableAttributedString.init(string: "a，哈哈たちaaaaa", attributes: [NSAttributedStringKey.font : NSFont.systemFont(ofSize: 30),NSAttributedStringKey.foregroundColor:NSColor.black])
 
         self.view.addSubview(ml)
 
@@ -45,5 +45,11 @@ class ViewController: NSViewController {
 
     
     }
+
+    func isChinese(str:String)  {
+
+    }
 }
+
+
 

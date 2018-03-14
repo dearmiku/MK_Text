@@ -40,11 +40,17 @@ class MK_Text_SenTence_String : MK_Text_Sentence_Protocol {
     }
 
     func drawInContext(context:CGContext,startCenterPoint:CGPoint){
-
+        var maskStr:NSAttributedString
+        #if os(macOS)
+            maskStr = NSAttributedString.init(string: "a", attributes: [NSAttributedStringKey.foregroundColor : NSColor.clear])
+        #else
+            maskStr = NSAttributedString.init(string: "a", attributes: [NSAttributedStringKey.foregroundColor : UIColor.clear])
+        #endif
+        str.append(maskStr)
         let frameSetter = CTFramesetterCreateWithAttributedString(str)
         let strSize = str.mk_size
         let y = startCenterPoint.y - strSize.height * 0.5
-        let drawRec = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: CGSize.init(width: strSize.width, height: strSize.height))
+        let drawRec = CGRect.init(origin: CGPoint.init(x: startCenterPoint.x, y: y), size: CGSize.init(width: strSize.width*1.0, height: strSize.height*1.0))
         let patch = CGMutablePath.init()
         patch.addRect(drawRec)
         let frame = CTFramesetterCreateFrame(frameSetter, CFRange.init(location: 0, length: str.length), patch, nil)

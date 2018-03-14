@@ -95,7 +95,6 @@ public class MK_Label:MK_AsyncView{
                     let res = CGContext(data: nil, width: Int(newSize.width), height: Int(newSize.height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
                     return res
                 #else
-
                     UIGraphicsBeginImageContextWithOptions(newSize, false, MK_Scale)
                     let res = UIGraphicsGetCurrentContext()
                     res?.translateBy(x: 0, y: newSize.height)
