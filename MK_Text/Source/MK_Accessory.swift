@@ -113,6 +113,19 @@ class MK_Accessory:NSObject {
         return res
     }
 
+    static func removeViewFrom(str:NSAttributedString){
+        let arr:[MK_Accessory] = str.getAttributeValue(name: NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr))
+
+        arr.forEach { (acc) in
+            guard let type = acc.content else {return}
+            switch type {
+            case .image(_, _): break
+            case let .view(v, _):
+                v.removeFromSuperview()
+            }
+        }
+    }
+
 }
 
 extension MK_Accessory {
@@ -135,10 +148,10 @@ extension MK_Accessory {
 
 extension NSAttributedString {
 
-    ///获取富文本中附件
-    func getAccessory()->MK_Accessory?{
+    ///获取单个字符富文本中附件
+    func getAccessoryFromCha()->MK_Accessory?{
         guard self.string == MK_Accessory.Attribute_PlaceholderStr else { return nil }
-        let res : MK_Accessory? = self.getAttributeValue(name: NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr))
+        let res : MK_Accessory? = self.getAttributeValue(name: NSAttributedStringKey.init(MK_Accessory.AttributeKeyStr)).first
         return res
     }
 }

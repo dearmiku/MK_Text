@@ -16,7 +16,6 @@
 public class MK_AsyncView: MK_View {
 
     override public func draw(_ rect: CGRect) {
-
         guard let task = self.drawTask else {
             return
         }

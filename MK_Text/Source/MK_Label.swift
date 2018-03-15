@@ -31,19 +31,24 @@ public class MK_Label:MK_AsyncView{
         }
     }
 
-    ///富文本
+    ///富文本(内用)
     var text:NSMutableAttributedString? {
+        willSet{
+            guard let str = text else {return}
+            MK_Accessory.removeViewFrom(str: str)
+
+        }
         didSet{
             if text != nil{
                 weak var weakSelf = self
                 text?.addAttributes([NSAttributedStringKey.init(MK_Label.AttributeKey) : weakSelf ?? 0], range: text!.range)
             }
-            if self.window != nil {
-                self.draw(self.bounds)
-            }
+            self.setNeedsDisplay()
         }
     }
 
+    ///是否已经绘制过
+    var ishasDraw:Bool = false
     
     ///布局
     lazy var layout = { () -> MK_TextLayout in
@@ -54,11 +59,6 @@ public class MK_Label:MK_AsyncView{
     ///点击
     lazy var tapManager = MK_TapManager()
     
-    ///重制
-    public func reDraw(){
-        guard self.window != nil else { return }
-        self.draw(self.bounds)
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -77,7 +77,7 @@ public class MK_Label:MK_AsyncView{
     ///绘制任务
     fileprivate lazy var labelTask = { () -> MK_AsyncTask in
         var task = MK_AsyncTask()
-        
+
         task.disPlayBlock = {[weak self] ()-> CGImage? in
             
             guard self != nil else { return nil }
@@ -132,7 +132,7 @@ public class MK_Label:MK_AsyncView{
             #else
                 let im = UIGraphicsGetImageFromCurrentImageContext()?.cgImage
             #endif
-
+            self?.ishasDraw = true
             return im
         }
         return task
@@ -210,7 +210,6 @@ public class MK_Label:MK_AsyncView{
             }
             
         }
-        
     }
 #endif
 

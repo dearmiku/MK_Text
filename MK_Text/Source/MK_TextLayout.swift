@@ -115,7 +115,7 @@ extension MK_TextLayout {
             hight += lineHeight
 
             ///增加新行
-            if currentBottomLineY <= size.height{
+            if ceil(currentBottomLineY) <= ceil(size.height){
 
                 ///根据对齐方式调整布局
                 switch self.alignment{
@@ -211,7 +211,7 @@ extension MK_TextLayout {
             let cha = str.attributedSubstring(from: currentRange)
             
             //是否为附件类型
-            if let acc = cha.getAccessory() {
+            if let acc = cha.getAccessoryFromCha() {
                 ctt = acc.CenterToTop
                 ctb = acc.CenterToBottom
                 cW = acc.acc_Size.MK_Accessory_Width

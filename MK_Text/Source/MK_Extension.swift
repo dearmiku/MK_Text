@@ -46,11 +46,11 @@ extension NSAttributedString {
     }
 
     ///获取指定属性的值~
-    func getAttributeValue<R>(name:NSAttributedStringKey)->R?{
-        var res:R? = nil
+    func getAttributeValue<R>(name:NSAttributedStringKey)->[R]{
+        var res:[R] = []
         self.enumerateAttributes(in: self.range, options: NSAttributedString.EnumerationOptions.init(rawValue: 1)) { (dic, ran, boolP) in
             if let acc = dic[name] as? R {
-                res = acc
+                res.append(acc)
             }
         }
         return res
@@ -62,8 +62,8 @@ public extension NSMutableAttributedString {
     ///增加/修改属性的同时刷新Label
     public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange){
         self.addAttributes(dic, range: range)
-        guard let label:MK_Label = self.getAttributeValue(name: NSAttributedStringKey.init(MK_Label.AttributeKey)) else { return }
-        label.reDraw()
+        guard let label:MK_Label = self.getAttributeValue(name: NSAttributedStringKey.init(MK_Label.AttributeKey)).first else { return }
+        label.setNeedsDisplay()
     }
 
 }

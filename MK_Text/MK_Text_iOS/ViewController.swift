@@ -52,6 +52,18 @@ class ViewController: UIViewController {
         }
         ml.text = str
 
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            ml.isHidden = true
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                                 ml.attributeStr = NSAttributedString.init(string: "66666", attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 15),.foregroundColor:UIColor.black])
+
+            }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {
+ ml.isHidden = false
+
+            })
+        }
+
         //print(NSAttributedString.init(string: "Did not pass compliance testing，").size())
         //print(NSAttributedString.init(string: "Did not pass compliance testing，").boundingRect(with: CGSize.init(width: 1000, height: 1000), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil))
         //

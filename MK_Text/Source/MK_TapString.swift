@@ -96,7 +96,7 @@ public extension NSMutableAttributedString {
 extension NSAttributedString {
 
     func getTapStringAttr()->MK_TapStringAttr? {
-        let res:MK_TapStringAttr? = self.getAttributeValue(name: NSAttributedStringKey.init(MK_TapStringAttr.AttributeKey))
+        let res:MK_TapStringAttr? = self.getAttributeValue(name: NSAttributedStringKey.init(MK_TapStringAttr.AttributeKey)).first
         return res
     }
 }
