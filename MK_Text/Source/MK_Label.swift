@@ -43,7 +43,11 @@ public class MK_Label:MK_AsyncView{
                 weak var weakSelf = self
                 text?.addAttributes([NSAttributedStringKey.init(MK_Label.AttributeKey) : weakSelf ?? 0], range: text!.range)
             }
+            #if os(macOS)
+                self.setNeedsDisplay(self.bounds)
+                #else
             self.setNeedsDisplay()
+                #endif
         }
     }
 
@@ -73,7 +77,6 @@ public class MK_Label:MK_AsyncView{
         self.setNewTask(task: labelTask)
     }
     
-    private var needSize:CGSize!
     ///绘制任务
     fileprivate lazy var labelTask = { () -> MK_AsyncTask in
         var task = MK_AsyncTask()
@@ -100,11 +103,8 @@ public class MK_Label:MK_AsyncView{
                     res?.translateBy(x: 0, y: newSize.height)
                     res?.scaleBy(x: 1.0, y: -1.0)
                     return res
-
                 #endif
-
             }
-
             if self!.isAsync {
                 #if os(macOS)
                     let sema = DispatchSemaphore.init(value: 0)

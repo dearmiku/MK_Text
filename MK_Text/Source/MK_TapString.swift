@@ -83,8 +83,7 @@ public extension NSMutableAttributedString {
         self.addAttributes([NSAttributedStringKey.init(MK_TapStringAttr.AttributeKey) : att], range: addRange)
 
         #if os(macOS)
-        if self.getAttributeValue(name: NSAttributedStringKey.font) == nil {
-
+        if self.getAttributeValue(name: NSAttributedStringKey.font).first == nil {
             self.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 10), range: self.range)
         }
         #endif

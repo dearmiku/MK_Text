@@ -14,7 +14,7 @@
 
 
 public class MK_AsyncView: MK_View {
-
+    
     override public func draw(_ rect: CGRect) {
         guard let task = self.drawTask else {
             return
@@ -24,7 +24,7 @@ public class MK_AsyncView: MK_View {
                 task.willDisplayBlock!(self)
             }
             if task.disPlayBlock != nil {
-
+                
                 let im = task.disPlayBlock!()
                 OperationQueue.main.addOperation({
                     #if os(macOS)
@@ -44,32 +44,32 @@ public class MK_AsyncView: MK_View {
             OperationQueue.main.addOperation(op)
         }
     }
-
-
-
+    
+    
+    
     ///是否异步绘制~
     public var isAsync:Bool = false
-
+    
     fileprivate var drawTask:MK_AsyncTask?
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
     }
-
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUpView()
     }
-
+    
     func setUpView(){
         _ = MK_RunTimeRuntimeObserver.share
         #if os(macOS)
             self.wantsLayer = true
         #endif
-
+        
     }
-
+    
     func setNewTask(task:MK_AsyncTask){
         if var cancelTask = drawTask{
             cancelTask.isCancel = false

@@ -45,7 +45,7 @@ class MK_TextLine{
 extension MK_TextLine {
     
     func getAttrbuteStrAt(point:CGPoint)->NSAttributedString?{
-        var wi = CGFloat(0.0)
+        var wi = CGFloat(xOff)
         for item in sentenceArr {
             if wi + item.size.width >= point.x && point.x > wi && item is MK_Text_SenTence_String{
                 let str = (item as! MK_Text_SenTence_String).str
@@ -53,8 +53,11 @@ extension MK_TextLine {
                 let frame = CTFramesetterCreateFrame(framesetter, CFRange.init(location: 0, length: str.length), CGPath.init(rect: CGRect.init(origin: CGPoint.zero, size: CGSize.init(width: INTPTR_MAX, height: INTPTR_MAX)), transform: nil), nil)
                 let line = unsafeBitCast(CFArrayGetValueAtIndex(CTFrameGetLines(frame), 0), to: CTLine.self)
                 let clickPoint = CGPoint.init(x: point.x - wi, y: (str.mk_size.height)*0.5)
-                let starIndex = CTLineGetStringIndexForPosition(line, clickPoint)
-                guard starIndex + 1 <= (str.string as NSString).length else { return nil }
+                var starIndex = CTLineGetStringIndexForPosition(line, clickPoint)
+
+                if starIndex == (str.string as NSString).length {
+                    starIndex -= 1
+                }
                 let res = str.attributedSubstring(from: NSRange.init(location: starIndex, length: 1))
                 return res
             }

@@ -11,10 +11,10 @@ import CoreGraphics
 
 #if os(macOS)
     import AppKit
-
+    
     //MARK:- NSBezierPath 扩展
     public extension NSBezierPath{
-
+        
         public var CGPath: CGPath
         {
             let path = CGMutablePath()
@@ -37,14 +37,14 @@ import CoreGraphics
 
 //MARK:- 富文本扩展
 extension NSAttributedString {
-
+    
     ///获取富文本字符串的快捷方式
     var range:NSRange{
         get{
             return NSRange.init(location: 0, length: self.length)
         }
     }
-
+    
     ///获取指定属性的值~
     func getAttributeValue<R>(name:NSAttributedStringKey)->[R]{
         var res:[R] = []
@@ -58,18 +58,22 @@ extension NSAttributedString {
 }
 
 public extension NSMutableAttributedString {
-
+    
     ///增加/修改属性的同时刷新Label
     public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange){
         self.addAttributes(dic, range: range)
         guard let label:MK_Label = self.getAttributeValue(name: NSAttributedStringKey.init(MK_Label.AttributeKey)).first else { return }
-        label.setNeedsDisplay()
+        #if os(macOS)
+            label.setNeedsDisplay(label.bounds)
+        #else
+            label.setNeedsDisplay()
+        #endif
     }
-
+    
 }
 
 extension MK_View {
-
+    
     func getBoundsThreadSafe()->CGSize{
         if Thread.current.isMainThread {
             return self.bounds.size
