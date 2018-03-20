@@ -56,6 +56,33 @@
 
 ![居中对齐效果图](https://github.com/dearmiku/MK_Text/blob/master/Image/%E5%B1%85%E4%B8%AD%E5%AF%B9%E9%BD%90.png?raw=true)
 
+## 提前换行
+为了较好的阅读效果,有时我们需要提前换行,否则一个完整的单词就会分两行显示,就像**UILable**一样.我提供下面的属性,来实现这样的效果
+
+
+```
+    ///判断是否进行提前换行条件闭包
+    ///参数一: Label要绘制的富文本
+    ///参数二: 本行结尾字符的下标
+    var makeNewLineEarlyConditionBlock:((NSAttributedString,Int)->(Bool)) = {(str,index)->Bool in
+        return false
+    }
+
+    ///单词分隔符(单个字符)数组
+    var wordSeparatorArr:[String] = [" "]
+```
+`wordSeparatorArr`数组中存储着单词的分隔符,默认数组中只有" "(空格)一个元素.就如**UILabel**一样,不同单词间以空格区分
+
+`makeNewLineEarlyConditionBlock`在本行即将换行时,若存在将一个词分割为两行显示时,则会回调该闭包,来确定是否要提前换行,因为对于中文而言,则不存在这样一个字分两行显示的问题,这里使用者可以根据自己的实际情况来处理~
+
+## 效果图
+
+1,未使用提前换行
+![测试1](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/makeNewLine1.png)
+
+2,使用提前换行(分隔符为" ",闭包直接返回`true`)
+![测试1](https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/makeNewLine2.png)
+
 ## 异步渲染
 通过设置 Label的**isAsync**属性来确定~ 默认为false
 

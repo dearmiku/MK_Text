@@ -22,6 +22,13 @@ protocol MK_Text_Sentence_Protocol {
     ///绘制大小
     var size:CGSize { get }
 
+    ///绘制中心至顶端距离
+    var ctt:CGFloat { get }
+
+    ///绘制中心至底端距离
+    var ctb:CGFloat { get }
+
+
     ///在指定context 和 起点(左上角)进行绘制
     func drawInContext(context:CGContext,startCenterPoint:CGPoint)
 
@@ -30,9 +37,28 @@ protocol MK_Text_Sentence_Protocol {
 ///绘制字句--字符串
 class MK_Text_SenTence_String : MK_Text_Sentence_Protocol {
 
+    var ctt: CGFloat{
+        get{
+            return size.height * 0.5
+        }
+    }
+
+    var ctb: CGFloat{
+        get{
+            return size.height * 0.5
+        }
+    }
+
+
     var str:NSMutableAttributedString
 
     var size:CGSize
+
+    ///是否包含空格
+    var isExistBlank:Bool{
+        let res = (str.string as NSString).range(of: " ")
+        return res.location != NSNotFound
+    }
 
     init(string:NSMutableAttributedString,strSize:CGSize) {
         str = string
@@ -65,6 +91,20 @@ class MK_Text_SenTence_String : MK_Text_Sentence_Protocol {
 
 ///绘制字句--附件
 class MK_Text_SenTence_Accessory : MK_Text_Sentence_Protocol {
+
+
+    var ctt: CGFloat{
+        get{
+            return acc.CenterToTop
+        }
+    }
+
+    var ctb: CGFloat{
+        get{
+            return acc.CenterToBottom
+        }
+    }
+
 
     var acc:MK_Accessory
 

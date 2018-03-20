@@ -20,7 +20,7 @@ import CoreText
 
 public extension NSAttributedString{
 
-   public var mk_size:CGSize{
+    public var mk_size:CGSize{
         var res:CGSize
         #if os(macOS)
             res = self.boundingRect(with: CGSize(width: INTPTR_MAX, height: INTPTR_MAX), options: NSString.DrawingOptions.usesLineFragmentOrigin).size
@@ -69,6 +69,26 @@ public extension MK_Label {
         }
     }
 
+    ///判断是否进行提前换行条件闭包(默认不做提前换行) 富文本 为当前Label要绘制的
+    public var makeNewLineEarlyConditionBlock:((NSAttributedString,Int)->(Bool)){
+        get{
+            return self.layout.makeNewLineEarlyConditionBlock
+        }
+        set{
+            self.layout.makeNewLineEarlyConditionBlock = newValue
+        }
+    }
+
+    ///单词分隔符(单个字符)数组
+    public var wordSeparatorArr:[String] {
+        get{
+            return self.layout.wordSeparatorArr
+        }
+        set{
+            self.layout.wordSeparatorArr = newValue
+        }
+    }
+
 }
 
 protocol MK_TextLayout_Delegate {
@@ -93,6 +113,13 @@ class MK_TextLayout:NSObject{
     ///是否自动扩充大小(自动布局)
     var isAutoLayoutSize : Bool  = false
 
+    ///判断是否进行提前换行条件闭包
+    var makeNewLineEarlyConditionBlock:((NSAttributedString,Int)->(Bool)) = {(str:NSAttributedString,index:Int)->Bool in
+        return false
+    }
+
+    ///单词分隔符(单个字符)数组
+    var wordSeparatorArr:[String] = [" "]
 }
 
 
@@ -163,21 +190,20 @@ extension MK_TextLayout {
         var currentCenterToBottom = CGFloat(0)
         var currentRange = NSRange.init(location: 0, length: 1)
         
-        var ctt = CGFloat(0)
-        var ctb = CGFloat(0)
+        var ctt = CGFloat(0)    ///中心距离顶部距离
+        var ctb = CGFloat(0)    ///中心距离底部距离
         var cW = CGFloat(0)
 
 
         var sentence:MK_Text_Sentence_Protocol? = nil
         var sentenceArr:[MK_Text_Sentence_Protocol] = []
-        
-        
+
+        ///当前处理的富文本下标
+        var i = 0
+
         ///向外输出Line 并判断是否继续解析~
         func getCanelResultAndOutLine(lineWidth:CGFloat)->Bool{
-            if let beforeSec = sentence {
-                sentenceArr.append(beforeSec)
-            }
-            
+
             let y = maxHight - currentYR - (currentCenterToTop + currentCenterToBottom)*0.5 
             
             let line = MK_TextLine.init(sentArr: sentenceArr, startCenterPoint: CGPoint.init(x: 0, y: y), lineHeight: (currentCenterToTop + currentCenterToBottom), centerOff: (currentCenterToTop - currentCenterToBottom)*0.5)
@@ -185,44 +211,95 @@ extension MK_TextLayout {
             return isCancel(line,currentCenterToBottom + currentCenterToTop, lineWidth)
         }
         
-        ///当宽度越界
+        ///判断当前宽度是否越界,是否继续向下处理 
         func whenWidthIsOutofBorder()->Bool{
             
             if Int(cW + currentXR) > Int(maxWidth) {
+                ///越界将剩余字句加入
+                if let beforeSec = sentence {
+                    sentenceArr.append(beforeSec)
+                }
+
+                ///获取下一行的初始字句 和 初始 X
+                let (nextLineStartSentence,nextLineCurrentXR,nextLineCTT,nextLineCTB) = dealMakeNewLineEarlyCondition()
+
+                ///计算当前字行(字句数组)的 CTT,CTB参数
+                calculateSentenceArrPa()
+
                 let isCancelRes = getCanelResultAndOutLine(lineWidth: currentXR)
                 ///换行处理
                 if !isCancelRes {
+
+                    
                     
                     currentYR += (currentCenterToTop + currentCenterToBottom)
-                    currentXR = CGFloat(0)
+                    currentXR = nextLineCurrentXR
                     sentenceArr.removeAll()
-                    sentence = nil
+                    sentence = nextLineStartSentence
+                    currentCenterToTop = nextLineCTT
+                    currentCenterToBottom = nextLineCTB
                 }
                 return isCancelRes
             }
             return false
         }
+
+
+        ///处理提前换行事宜,返回下一行的初始字句 和 宽度 CTT 和 CTB 距离
+        func dealMakeNewLineEarlyCondition()->(MK_Text_Sentence_Protocol?,CGFloat,CGFloat,CGFloat){
+            var nextLineStartSentence:MK_Text_Sentence_Protocol? = nil
+            var nextLineCurrentXR = CGFloat(0)
+            var nextLineInitialCTT = CGFloat(0)
+            var nextLineInitialCTB = CGFloat(0)
+
+            /// 对字句数组最后一元素进行判断 判断当前元素是否将单个词语拆解
+            if i + 1 < str.length && sentenceArr.count > 1{
+
+                let cha = str.attributedSubstring(from: NSRange.init(location: i, length: 1))
+                ///判断是否为单词分隔符
+                let condi = wordSeparatorArr.reduce(false, { (out, item) -> Bool in
+                    if item == cha.string{
+                        return true
+                    }
+                    return out
+                })
+                if makeNewLineEarlyConditionBlock(str,i) && !condi {
+
+                    nextLineStartSentence = sentenceArr.last
+                    sentenceArr.removeLast()
+                    nextLineCurrentXR = nextLineStartSentence!.size.width
+                    nextLineInitialCTT = nextLineStartSentence!.ctt
+                    nextLineInitialCTB = nextLineStartSentence!.ctb
+                    currentXR -= nextLineStartSentence!.size.width
+                }
+            }
+            return (nextLineStartSentence,nextLineCurrentXR,nextLineInitialCTT,nextLineInitialCTB)
+        }
+
+        ///计算当前 字句数组的 CTT,CTB,CurrentX 数据
+        func calculateSentenceArrPa(){
+            sentenceArr.forEach { (item) in
+                currentCenterToTop = max(currentCenterToTop, item.ctt)
+                currentCenterToBottom = max(currentCenterToBottom, item.ctb)
+            }
+        }
         
         
         //MARK:- 遍历富文本
-        for i in 0..<str.length{
+        while(i < str.length){
             
             currentRange.location = i
             let cha = str.attributedSubstring(from: currentRange)
             
             //是否为附件类型
             if let acc = cha.getAccessoryFromCha() {
-                ctt = acc.CenterToTop
-                ctb = acc.CenterToBottom
+
                 cW = acc.acc_Size.MK_Accessory_Width
-                
                 ///越界判断
                 guard !whenWidthIsOutofBorder() else { return }
                 
                 ///处理当前布局
                 currentXR += cW
-                if ctt > currentCenterToTop { currentCenterToTop = ctt }
-                if ctb > currentCenterToBottom { currentCenterToBottom = ctb }
                 
                 //之前是否存在当前字句
                 if let beforeSec = sentence{
@@ -235,8 +312,6 @@ extension MK_TextLayout {
                 ///普通富文本串
             }else{
                 let size = cha.mk_size
-                ctt = size.height/2
-                ctb = ctt
                 cW = size.width
                 
                 ///越界判断
@@ -244,13 +319,27 @@ extension MK_TextLayout {
                 
                 ///处理当前布局
                 currentXR += cW
-                if ctt > currentCenterToTop { currentCenterToTop = ctt }
-                if ctb > currentCenterToBottom { currentCenterToBottom = ctb }
+                ///当前字句是否为字符串字句
+                if let beforeSec = sentence as? MK_Text_SenTence_String {
 
-                if let beforeSec = sentence as? MK_Text_SenTence_String{
-                    beforeSec.str.append(cha)
-                    beforeSec.size.width += size.width
-                    beforeSec.size.height = currentCenterToBottom + currentCenterToTop
+                    ///判断是否为单词分隔符
+                    let condi = wordSeparatorArr.reduce(false, { (out, item) -> Bool in
+                        if item == cha.string{
+                            return true
+                        }
+                        return out
+                    })
+                    ///当为单词分割符时,则将其作为单独一个字句存在
+                    if condi{
+                        sentenceArr.append(beforeSec)
+                        let speSentence =  MK_Text_SenTence_String.init(string: NSMutableAttributedString.init(attributedString: cha), strSize: size)
+                        sentenceArr.append(speSentence)
+                        sentence = nil
+                    }else{
+                        beforeSec.str.append(cha)
+                        beforeSec.size.width += size.width
+                        beforeSec.size.height = max(beforeSec.size.height, size.height)
+                    }
                 }else{
                     if sentence != nil {
                         sentenceArr.append(sentence!)
@@ -259,7 +348,15 @@ extension MK_TextLayout {
                     sentence = MK_Text_SenTence_String.init(string: NSMutableAttributedString.init(attributedString: cha), strSize: size)
                 }
             }
+            i += 1
         }
+
+
+        ///将最后剩余字句加入数组 并输出
+        if let beforeSec = sentence {
+            sentenceArr.append(beforeSec)
+        }
+        calculateSentenceArrPa()
         _ = getCanelResultAndOutLine(lineWidth: currentXR)
     }
 

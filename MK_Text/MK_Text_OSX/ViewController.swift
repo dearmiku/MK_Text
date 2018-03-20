@@ -19,7 +19,7 @@ class ViewController: NSViewController {
         ml.alignment = .center
         ml.isAsync = true
 
-        let str = NSMutableAttributedString.init(string: "1234567890")
+        let str = NSMutableAttributedString.init(string: "012 3456 miku 789")
         str.addAttribute(NSAttributedStringKey.font, value: NSFont.systemFont(ofSize: 16), range: NSRange.init(location: 0, length: str.length))
 
         let im = NSImage.init(named: NSImage.Name.init("face"))
@@ -38,13 +38,11 @@ class ViewController: NSViewController {
         let response = MK_TapResponse.init(highlite: { (str) -> [NSAttributedStringKey : Any]? in
             return [NSAttributedStringKey.foregroundColor : NSColor.red]
         }) { (str, range) in
-            //print("点击字符串~")
+            print("点击字符串~")
         }
         tap.addTapAttr(response: response, range: nil)
         str.append(tap)
 
-
-        //        ml.text = NSMutableAttributedString.init(string: "a，哈哈たちaaaaa", attributes: [NSAttributedStringKey.font : NSFont.systemFont(ofSize: 30),NSAttributedStringKey.foregroundColor:NSColor.black])
 
         ml.attributeStr = str
 
