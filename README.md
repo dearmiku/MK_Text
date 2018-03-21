@@ -1,32 +1,35 @@
 # MK_Text
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/dearmiku/MK_Text/master/LICENSE) [![Support](https://img.shields.io/badge/support-iOS%208%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/) [![Support](https://img.shields.io/badge/support-OSX%2010.10%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/macos) [![CocoaPods](https://img.shields.io/cocoapods/p/MK_Text.svg?style=flat)]()
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/dearmiku/MK_Text/master/LICENSE) [![Support](https://img.shields.io/badge/support-iOS%208%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/) [![Support](https://img.shields.io/badge/support-OSX%2010.10%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/macos) [![CocoaPods](https://img.shields.io/cocoapods/p/MK_Text.svg?style=flat)](https://github.com/dearmiku/MK_Text)
 
-# 简介
-**MK_Text**是方便开发者使用富文本的纯Swift框架,目标向YYText看齐,功能会在后续逐渐丰富,目前实现了Label的基本功能~ (๑•ᴗ•๑)
+# Introduction
+**MK_Text** is a pure Swift framework that makes it easy for developers to use rich text. The goal is to align with YYText. The function will be gradually enriched in the future. Currently, the basic functions of Label are realized.~ (๑•ᴗ•๑) The last thing to say is that my English is not very good. Please forgive me.[中文文档](https://github.com/dearmiku/MK_Text/blob/master/Doc_CN/README_CN.md)
 
-# 特性
-> 支持图文混排,支持富文本与View混排
+
+
+# Features
+> Support picture and text mixing, support rich text and View mixed
+>
+> Support for asynchronous typographic rendering
+>
+> Support highlight text settings
+>
+> Support OSX and iOS
+>
+> Supports automatic layout
 > 
-> 支持异步排版渲染
 > 
-> 支持高亮文字设置
-> 
-> 支持OSX 与 iOS
-> 
-> 支持自动布局
 
-# 用法
-## 图文混排
+# Usage
+## Photo-text
 
-可自定义图片显示大小,默认显示图片原始大小~
+Can customize the picture display size, the default display picture original size ~
 
-可是设置图片与其所在子行的对其方式,默认为与字行中线一致~
-
+Can set the picture and its sub-line of its way, the default is consistent with the middle line of the word ~
 ```
         let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.top)
         
-        //控件的用法与图片基本一致
-        
+        //Set the View method and set the picture basically the same
+                
         let v = UISwitch.init()
         let viewStr = NSMutableAttributedString.mk_view(view: v, superView: ml, size: v.bounds.size)
         
@@ -34,62 +37,63 @@
 
 
 
-## 高亮文字
+## Highlighted text
 
-使用高亮属性时需先创建**MK_TapResponse**结构体,可选返回两个闭包: 1,高亮时的富文本属性~ 2,完成点击时回调的闭包~
+When using the highlighting attribute, first create a **MK_TapResponse** structure and return two optional closures: 1. Rich text attribute when highlighted ~ 2. Closed callback closure when clicked.
 
-这里判断点击是否完成的逻辑与Button一致~
+Here's the logic to determine whether the click is complete is consistent with Button's touchUpInside~
 
 ```
 
-        let tap = NSMutableAttributedString.init(string: "可点击字符")
+        let tap = NSMutableAttributedString.init(string: "Clickable character")
         let response = MK_TapResponse.init(highlitedBlock: { (str) -> [NSAttributedStringKey : Any]? in
             return [NSAttributedStringKey.foregroundColor : UIColor.red]
         }) { (str, range) in
-            print("点击字符串~")
+            print("Click on the string~")
         }
         tap.addTapAttr(response: response, range: nil)
 ```
 
-## 对齐方式
-通过**MK_Label**的 alignment属性 进行设置(默认为左对齐),此处以居中对此为例子
+## Alignment
+
+Set by the alignment property of **MK_Label** (default is left-aligned), here centered for example
  <img src="https://github.com/dearmiku/MK_Text/blob/master/Image/%E5%B1%85%E4%B8%AD%E5%AF%B9%E9%BD%90.png?raw=true" width = "300"  alt="居中对齐效果图" align=center />
 
 
-## 提前换行
-为了较好的阅读效果,有时我们需要提前换行,否则一个完整的单词就会分两行显示,就像**UILable**一样.我提供下面的属性,来实现这样的效果
-
+## Advance line break
+For better reading results, sometimes we need to wrap early, otherwise a complete word will be displayed in two lines, just like **UILable**. I provide the following attributes to achieve this effect
 
 ```
-    ///判断是否进行提前换行条件闭包
-    ///参数一: Label要绘制的富文本
-    ///参数二: 本行结尾字符的下标
+     ///Decide whether to perform premature line break condition closure
+     /// Argument 1: Rich text to be drawn by Label
+     /// Argument 2: subscript of the character at the end of the line
+     ///Default does not advance line break
     var makeNewLineEarlyConditionBlock:((NSAttributedString,Int)->(Bool)) = {(str,index)->Bool in
         return false
     }
 
-    ///单词分隔符(单个字符)数组
+   /// array of word separators (single characters)
     var wordSeparatorArr:[String] = [" "]
 ```
-`wordSeparatorArr`数组中存储着单词的分隔符,默认数组中只有" "(空格)一个元素.就如**UILabel**一样,不同单词间以空格区分
+The `wordSeparatorArr` array stores word separators. The default array contains only one " " (space) element. Just like **UILabel**, different words are separated by spaces.
 
-`makeNewLineEarlyConditionBlock`在本行即将换行时,若存在将一个词分割为两行显示时,则会回调该闭包,来确定是否要提前换行,因为对于中文而言,则不存在这样一个字分两行显示的问题,这里使用者可以根据自己的实际情况来处理~
+`makeNewLineEarlyConditionBlock`: When the line is to be wrapped, if there is a word split into two lines, the closure will be called back to determine if the line should be prepended, because for Chinese, Japanese, there is no such a Words are displayed in two lines, where the user can handle it according to his actual situation.
 
-## 效果图
+### Effect Display
 
-1,未使用提前换行
+1, Did not use early line breaks
 
  <img src="https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/makeNewLine1.png" width = "300"  alt="未提前换行效果图" align=center />
 
-2,使用提前换行(分隔符为" ",闭包直接返回`true`)
+2, the use of early line breaks (delimiter "", the closure directly returns `true`)
 
  <img src="https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/makeNewLine2.png" width = "300"  alt="提前换行效果图" align=center />
 
-## 异步渲染
-通过设置 Label的**isAsync**属性来确定~ 默认为false
+## Asynchronous Rendering
+By setting the Label's **isAsync** property to determine ~ defaults to false
 
-## 效果
-目前只实现了上述的功能,其他功能会在后续丰富~
+## Effect Display
+At present, only the above functions are implemented, and other functions will be enriched in the future.
 
  <img src="https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/iOS%E6%95%88%E6%9E%9C%E5%9B%BE.gif" width = "300"  alt="iOS效果图" align=center />
 
@@ -97,16 +101,14 @@
 
 
 
-# 性能
-关于性能我只是简单的测试了一下,和**YY_Text**比较一下,下面是为绘制所用的时间的简单对比~
-
+# Performance
+About performance I simply tested it and compared it to **YY_Text**. Here is a simple comparison of the time used to draw~
 
  <img src="https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/T1.png" width = "500"  alt="性能测试结果图" align=center />
   <img src="https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/T2.png" width = "500"  alt="性能测试结果图" align=center />
 
 
-这里是测试耗时的代码部分,比较的是绘制时间~
-
+Here is the test time-consuming part of the code, the comparison is the drawing time ~
 **MK_Text**
 
  <img src="https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/C1.png" width = "500"  alt="性能测试代码图" align=center />
@@ -115,31 +117,28 @@
 
  <img src="https://raw.githubusercontent.com/dearmiku/MK_Text/master/Image/C2.png" width = "500"  alt="性能测试代码图" align=center />
 
+Measured results are faster **MK_Text**, may be my function is relatively simple and the reason for using **Swift** ~ it is not slow ~
 
-测下来的结果是**MK_Text**快一些,可能是我的功能相对简单和使用**Swift**的原因吧~ 总计不算慢~
-
-
-# 使用注意
-## 中途修改富文本属性
-若需要在修改富文本属性的同时刷新UI界面,请使用下面这个方法
-
+# Use caution
+## Modifying Rich Text Properties Midway
+If you need to refresh the UI interface while modifying the rich text attributes, use the following method
 ```
 public func mk_setAttrtbute(dic:[NSAttributedStringKey : Any], range: NSRange)->Void
 ```
 
-## 自动布局
+## Automatic layout
 
-**MK_Text**对于自动约束的支持是参照**UILabel**来做的, 当View的**translatesAutoresizingMaskIntoConstraints**为true时, 则按照View的frame进行渲染. 
+** MK_Text** support for automatic constraints is done with reference to **UILabel**. When View's **translatesAutoresizingMaskIntoConstraints** is true, it is rendered according to the View's frame.
 
-若为false,则会判断约束是否约束到宽高, 若约束到 则按约束的宽高进行渲染,若未约束到,则会根据渲染内容来补充宽高约束~
+If false, it will judge whether the constraint is constrained to width and height. If it is constrained, it will be rendered according to the width and height of the constraint. If it is not constrained, it will complement the width and height constraints according to the rendering content.
 
 
-
-# 安装
+# Install
 ## CocoaPods
-在 Podfile 中添加 pod 'MK_Text'
+Add pod 'MK_Text' in Podfile
 
 
-# 系统要求
-OSX 10.10 或 iOS 8.0
+# System Requirements
+OSX 10.10 or iOS 8.0
+
 

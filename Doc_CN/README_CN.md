@@ -1,5 +1,5 @@
 # MK_Text
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/dearmiku/MK_Text/master/LICENSE) [![Support](https://img.shields.io/badge/support-iOS%208%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/) [![Support](https://img.shields.io/badge/support-OSX%2010.10%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/macos) [![CocoaPods](https://img.shields.io/cocoapods/p/MK_Text.svg?style=flat)]()
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/dearmiku/MK_Text/master/LICENSE) [![Support](https://img.shields.io/badge/support-iOS%208%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/) [![Support](https://img.shields.io/badge/support-OSX%2010.10%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/macos) [![CocoaPods](https://img.shields.io/cocoapods/p/MK_Text.svg)](https://github.com/dearmiku/MK_Text)
 
 # 简介
 **MK_Text**是方便开发者使用富文本的纯Swift框架,目标向YYText看齐,功能会在后续逐渐丰富,目前实现了Label的基本功能~ (๑•ᴗ•๑)
@@ -20,7 +20,7 @@
 
 可自定义图片显示大小,默认显示图片原始大小~
 
-可是设置图片与其所在子行的对其方式,默认为与字行中线一致~
+可设置图片与其所在子行的对其方式,默认为与字行中线一致~
 
 ```
         let imStr = NSMutableAttributedString.mk_image(im: MK_Image.init(named: NSImage.Name.init("face"))!, size: CGSize.init(width: 30, height: 30), alignType: NSMutableAttributedString.AlignType.top)
@@ -75,7 +75,7 @@
 
 `makeNewLineEarlyConditionBlock`在本行即将换行时,若存在将一个词分割为两行显示时,则会回调该闭包,来确定是否要提前换行,因为对于中文而言,则不存在这样一个字分两行显示的问题,这里使用者可以根据自己的实际情况来处理~
 
-## 效果图
+### 效果图
 
 1,未使用提前换行
 
