@@ -64,8 +64,13 @@ public class MK_AsyncView: MK_View {
     
     func setUpView(){
         _ = MK_RunTimeRuntimeObserver.share
+        
+        
         #if os(macOS)
             self.wantsLayer = true
+            self.layer?.backgroundColor = NSColor.clear.cgColor
+        #else
+            self.backgroundColor = UIColor.clear
         #endif
         
     }

@@ -52,37 +52,12 @@ class ViewController: UIViewController {
         }
         ml.text = str
 
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-            ml.isHidden = true
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                                 ml.attributeStr = NSAttributedString.init(string: "66666", attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 15),.foregroundColor:UIColor.black])
-
-            }
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {
- ml.isHidden = false
-
+        for i in 0...100{
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(i)*0.1, execute: {
+                ml.attributeStr = str
             })
         }
 
-        //print(NSAttributedString.init(string: "Did not pass compliance testing，").size())
-        //print(NSAttributedString.init(string: "Did not pass compliance testing，").boundingRect(with: CGSize.init(width: 1000, height: 1000), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil))
-        //
-        //        let yyla = YYLabel()
-        //        yyla.attributedText = NSMutableAttributedString.init(string: "66666666666666666666666", attributes: nil)
-        //        self.view.addSubview(yyla)
-
-        //        let mkLa = MK_Label()
-        //        mkLa.text = NSMutableAttributedString.init(string: "1234567890", attributes: [NSAttributedStringKey.font:UIFont.systemFont(ofSize: 10),.foregroundColor:UIColor.black])
-        //        self.view.addSubview(mkLa)
-        //
-        //
-        //        yyla.snp.makeConstraints { (make) in
-        //            make.center.equalToSuperview()
-        //        }
-        //        mkLa.snp.makeConstraints { (make) in
-        //            make.center.equalToSuperview()
-        //            make.width.equalTo(100)
-        //        }
 
     }
 }

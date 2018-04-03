@@ -53,6 +53,8 @@
 
 ## 对齐方式
 通过**MK_Label**的 alignment属性 进行设置(默认为左对齐),此处以居中对此为例子
+
+
  <img src="https://github.com/dearmiku/MK_Text/blob/master/Image/%E5%B1%85%E4%B8%AD%E5%AF%B9%E9%BD%90.png?raw=true" width = "300"  alt="居中对齐效果图" align=center />
 
 

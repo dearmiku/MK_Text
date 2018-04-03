@@ -57,9 +57,6 @@ class ViewController: NSViewController {
 
     }
 
-    func isChinese(str:String)  {
-
-    }
 }
 
 
